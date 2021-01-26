@@ -25,6 +25,7 @@
 #include "process.hpp"
 #include "path.hpp"
 #include <vector>
+#include <TlHelp32.h>
 
 namespace zl
 {
