@@ -583,6 +583,12 @@ Exit0:
         layout.PartitionEntry.RemoveAll();
         for (DWORD i = 0; i < pLayoutEx->PartitionCount; i++)
         {
+            const PARTITION_INFORMATION_EX& partition = pLayoutEx->PartitionEntry[i];
+            if (0 == partition.PartitionNumber && 0 == partition.StartingOffset.QuadPart && 0 == partition.PartitionLength.QuadPart)
+            {
+                continue; // 有时会多出一个空的不存在分区，不记录
+            }
+
             layout.PartitionEntry.Add(pLayoutEx->PartitionEntry[i]);
         }
 
