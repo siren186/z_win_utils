@@ -56,6 +56,76 @@ public:
      * @note 如"h,,e", 若bIncludeEmpty为true,则结果为{"h", "", "e"}. 否则结果为{"h", "e"}.
      */
     static void Split(const T& sSrc,const T& sSplitStr, std::vector<T>& vecOutput, bool bIncludeEmpty = true);
+
+    /**
+     * @brief 将容器中的字符串用分隔符拼接在一起
+     * @param[in] container STL容器，如vector,list等
+     * @param[in] str 字符串分隔符
+     * @return 返回拼接后的结果
+     * @par 示例
+     * @code
+     *     std::vector<std::string> vec { "hello", "world" };
+     *     std::list<std::wstring> lst { L"hello", L"world" };
+     *     std::string result1 = ZLSplitStr::Join(vec, ','); // 返回结果："hello,world"
+     *     std::wstring result2 = ZLSplitStr::Join(lst, "||"); // 返回结果：L"hello||world"
+     * @end_code
+     */
+    template< typename _ContainerT>
+    static typename _ContainerT::value_type Join(const _ContainerT& container, const typename _ContainerT::value_type& str)
+    {
+        auto itBegin = std::begin(container);
+        auto itEnd = std::end(container);
+
+        typename _ContainerT::value_type result;
+        if (itBegin != itEnd)
+        {
+            result.append(*itBegin);
+            ++itBegin;
+        }
+
+        for (; itBegin != itEnd; ++itBegin)
+        {
+            result.append(str);
+            result.append(*itBegin);
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief 将容器中的字符串用分隔符拼接在一起
+     * @param[in] container STL容器，如vector,list等
+     * @param[in] ch 字符分隔符
+     * @return 返回拼接后的结果
+     * @par 示例
+     * @code
+     *     std::vector<std::string> vec { "hello", "world" };
+     *     std::list<std::wstring> lst { L"hello", L"world" };
+     *     std::string result1 = ZLSplitStr::Join(vec, ','); // 返回结果："hello,world"
+     *     std::wstring result2 = ZLSplitStr::Join(lst, "||"); // 返回结果：L"hello||world"
+     * @end_code
+     */
+    template< typename _ContainerT>
+    static typename _ContainerT::value_type Join(const _ContainerT& container, const typename _ContainerT::value_type::value_type& ch)
+    {
+        auto itBegin = std::begin(container);
+        auto itEnd = std::end(container);
+
+        typename _ContainerT::value_type result;
+        if (itBegin != itEnd)
+        {
+            result.append(*itBegin);
+            ++itBegin;
+        }
+
+        for (; itBegin != itEnd; ++itBegin)
+        {
+            result.push_back(ch);
+            result.append(*itBegin);
+        }
+
+        return result;
+    }
 };
 
 typedef ZLSplitStrT<std::string>  ZLSplitStrA;
@@ -73,6 +143,11 @@ template<class T>
 void ZLSplitStrT<T>::Split( const T& sSrc, const value_type chSplitChar, std::vector<T>& vecOutput, bool bIncludeEmpty )
 {
     vecOutput.clear();
+    if (sSrc.empty())
+    {
+        return;
+    }
+
     T tmp_str;
     size_type pos_begin = 0;
     size_type pos_find  = 0;
@@ -93,6 +168,11 @@ template<class T>
 inline void ZLSplitStrT<T>::Split( const T& sSrc, const T& sSplitStr, std::vector<T>& vecOutput, bool bIncludeEmpty)
 {
     vecOutput.clear();
+    if (sSrc.empty())
+    {
+        return;
+    }
+
     T tmp_str;
     size_type pos_find  = 0;
     size_type pos_begin = 0;
