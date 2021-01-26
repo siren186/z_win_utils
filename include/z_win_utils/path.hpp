@@ -26,7 +26,7 @@ namespace zl
 {
 namespace WinUtils
 {
-     /**
+    /**
      * @brief 提供对windows常见文件路径的操作
      */
     class ZLPath
@@ -39,169 +39,253 @@ namespace WinUtils
          */
         static CString GetModuleFullPath(HMODULE hModule)
         {
-            DWORD dwRet = 0;
-            CString strTemp;
-            TCHAR szFileName[MAX_PATH + 1] = {0};
-            dwRet = ::GetModuleFileName(hModule, szFileName, MAX_PATH);
+            TCHAR szFileName[MAX_PATH + 1] = { 0 };
+            DWORD dwRet = ::GetModuleFileName(hModule, szFileName, MAX_PATH);
+
+            CString fullpath;
             if (dwRet)
-                strTemp = szFileName;
-            return strTemp;
+            {
+                fullpath = szFileName;
+            }
+            return fullpath;
         }
+
         /**
          * @brief 获取文件名
          * @param[in] szFullPath 文件路径
          * @return 成功返回文件名, 失败返回路径
          */
-        static CString PathToFileName(LPCTSTR szFullPath)
+        static CString PathToFileName(LPCTSTR szPath)
         {
-            CString strPath(szFullPath);
-            strPath.Replace(_T('/'), _T('\\'));
-            int nPos = strPath.ReverseFind(_T('\\'));
-            if (nPos == -1)
-                return strPath;
+            int len = lstrlen(szPath);
+            int i = len - 1;
+            for (; i >= 0; --i)
+            {
+                if (_T('\\') == szPath[i] || _T('/') == szPath[i])
+                {
+                    break;
+                }
+            }
+
+            CString filename;
+            if (i > 0)
+            {
+                filename.Append(&szPath[i + 1]);
+            }
             else
-                return strPath.Right(strPath.GetLength() - nPos - 1);
+            {
+                filename = szPath;
+            }
+            return filename;
         }
-                
+
         /**
-         * @brief 获取文件夹路径
-         * @param[in] szFullPath 文件全路径
+         * @brief 获取父文件夹路径
+         * @param[in] szPath 文件全路径
          * @return 成功返回文件夹路径名, 失败返回空串
          */
-        static CString PathToFolderPath(LPCTSTR szFullPath)
+        static CString PathToParentDir(LPCTSTR szPath)
         {
-            CString strTemp(szFullPath);
-            int nPos = -1;
-            nPos = strTemp.ReverseFind(_T('\\'));
-            if (-1 == nPos)
-                nPos = strTemp.ReverseFind(_T('/'));
-            if (-1 == nPos)
-                return _T("");
-            return strTemp.Left(nPos + 1);
+            int len = lstrlen(szPath);
+            int i = len - 2;
+            for (; i >= 0; --i)
+            {
+                if (_T('\\') == szPath[i] || _T('/') == szPath[i])
+                {
+                    break;
+                }
+            }
+
+            CString parent;
+            if (i > 0)
+            {
+                parent.Append(szPath, i + 1);
+            }
+            return parent;
         }
+
         /**
-         * @brief 获取模块文件夹
+         * @brief 获取模块文件夹路径
          * @param[in] hModule 模块句柄
          * @return 成功返回文件夹路径名, 失败返回空串
          */
-        static CString GetModuleFolder(HMODULE hModule)
+        static CString GetModuleDir(HMODULE hModule)
         {
-            return PathToFolderPath(GetModuleFullPath(hModule));
+            return PathToParentDir(GetModuleFullPath(hModule));
         }
+
         /**
-         * @brief 去除文件后缀
-         * @param[in] szFileName 文件名
+         * @brief 去除文件后缀名
+         * @param[in] szPath 文件名
          * @return 成功返回文件名, 失败返回带后缀的文件名
          */
-        static CString FileNameRemoveSuffix(LPCTSTR szFileName)
+        static CString PathRemoveExtension(LPCTSTR szPath)
         {
-            CString strTemp(szFileName);
+            CString strTemp(szPath);
             int nPos = -1;
             nPos = strTemp.ReverseFind(_T('.'));
-            if (-1 == nPos) 
+            if (-1 == nPos)
+            {
                 return strTemp;
+            }
             return strTemp.Left(nPos);
         }
+
         /**
          * @brief 获取路径下的文件后缀
-         * @param[in] szFullPath 全路径
+         * @param[in] szPath 全路径
          * @return 成功返回文件后缀
          */
-        static CString PathToSuffix(LPCTSTR szFullPath)
+        static CString PathToExtension(LPCTSTR szPath)
         {
-            CString strTemp = PathToFileName(szFullPath);
+            CString strTemp(szPath);
             int nPos = -1;
             nPos = strTemp.ReverseFind(_T('.'));
-            if (-1 == nPos) 
-                return strTemp;
+            if (-1 == nPos)
+            {
+                return _T("");
+            }
             return strTemp.Mid(nPos + 1);
         }
-        /**
-         * @brief 获取父文件夹
-         * @param[in] szFullPath 全路径
-         * @return 成功返回父文件夹名, 失败返回路径
-         */
-        static CString GetParsentFolder(LPCTSTR szFullPath)
-        {
-            CString strParsentPath(szFullPath);
-            PathRemoveBackslash(strParsentPath);
-            PathRemoveFileSpec(strParsentPath);
-            if (strParsentPath.IsEmpty())
-                strParsentPath = szFullPath;
-            return strParsentPath;
-        }
+
         /**
          * @brief 获取根路径
          * @param[in] szFullPath全路径
          * @return 成功返回根路径, 失败返回全路径
          */
-        static CString GetRootPath(LPCTSTR szFullPath)
+        static CString GetRootDir(LPCTSTR szFullPath)
         {
-            CString strRoot(szFullPath);
-            CString strTempPath(szFullPath);
-            int nPos = strTempPath.Find(_T('\\'));
-            if (nPos != -1)
-                strRoot = strTempPath.Left(nPos);
+            int len = lstrlen(szFullPath);
+            int i = 0;
+            for (; i < len; ++i)
+            {
+                if (_T('\\') == szFullPath[i] || _T('/') == szFullPath[i])
+                {
+                    break;
+                }
+            }
+
+            CString strRoot;
+            if (i > 0)
+            {
+                strRoot.Append(szFullPath, i + 1);
+            }
             return strRoot;
         }
+
         /**
-         * @brief 获取合法路径
-         * @param[in] strPath 路径
-         * @return 成功返回路径
-         */
-        static CString LegalizePath(const CString &strPath)
-        {
-            CString strOriginPath = strPath;
-            CString strData(strOriginPath);
-            CString strFolderPath;
-            CString strDstPath;
-            while (1)
-            {
-                strFolderPath = GetRootPath(strData);
-                if (strFolderPath == _T(".."))
-                    strDstPath = GetParsentFolder(strDstPath);
-                else
-                    strDstPath.Append(strFolderPath);
-                PathAddBackslash(strDstPath);
-                strData = strData.Mid(strFolderPath.GetLength());
-                strData.TrimLeft(L"\\");
-                if (strData.IsEmpty())
-                    break;
-            }
-            return strDstPath;
-        }
-        /**
-         * @brief 路径加反斜线
-         * @param[in] strPath 路径
+         * @brief 路径末尾加反斜线
+         * @param[in] szPath 路径
          * @return 返回路径
          */
-        static void PathAddBackslash(CString& strPath)
+        static CString PathAddBackslash(LPCTSTR szPath)
         {
-            CString strTemp;
-            strTemp = strPath.Right(1);
-            if (strTemp != _T("\\") && strTemp != _T("/"))
+            CString strPath = szPath;
+            if (strPath.IsEmpty())
+            {
+                return _T("");
+            }
+
+            TCHAR ch = strPath[strPath.GetLength() - 1];
+            if (_T('\\') != ch && _T('/') != ch)
+            {
                 strPath.Append(_T("\\"));
-        }
-        /**
-         * @brief 去除路径反斜线
-         * @param[in] strPath 路径
-         * @return 返回去掉反斜线后的路径
-         */
-        static void PathRemoveBackslash(CString &strPath)
-        {
-            if (strPath.Right(1) == _T("\\"))
-                strPath = strPath.Left(strPath.GetLength() - 1);
+            }
+            return strPath;
         }
 
-        static void PathRemoveFileSpec(CString& strPath)
+        /**
+         * @brief 去除路径末尾多余的斜线或反斜线
+         * @param[in] szPath 路径
+         * @param[in] removeAll 是否移除末尾所有的斜线或反斜线，在末尾有重复多个的时候有效
+         * @return 返回去掉斜线或反斜线后的路径
+         */
+        static CString PathRemoveBackslash(LPCTSTR szPath, BOOL removeAll = TRUE)
         {
-            int nPos = strPath.ReverseFind(_T('\\'));
-            if (nPos == -1)
-                strPath.Empty();
+            CString strPath;
+            if (removeAll)
+            {
+                int len = lstrlen(szPath);
+                int i = len - 1;
+                for (; i >= 0; --i)
+                {
+                    if (_T('\\') != szPath[i] && _T('/') != szPath[i])
+                    {
+                        break;
+                    }
+                }
+
+                if (i > 0)
+                {
+                    strPath.Append(szPath, i + 1);
+                }
+            }
             else
-                strPath = strPath.Left(nPos);
+            {
+                strPath = szPath;
+                LPTSTR pszBuffer = strPath.GetBuffer(strPath.GetLength());
+                ::PathRemoveBackslash(pszBuffer);
+                strPath.ReleaseBuffer();
+            }
+
+            return strPath;
+        }
+
+        /**
+         * @brief 将路径转换成合法的windows路径，如路径中有".."等相对路径拼接，会被转换出来
+         * @param[in] szPath 要转换的路径
+         * @param[in] bUniqueBackslash 是否去重斜杠或反斜杠
+         * @param[in] bFormatBackslash 是否将斜杠转换成反斜杠
+         * @return 转换后的路径
+         */
+        static CString PathCanonicalize(LPCTSTR szPath, BOOL bUniqueBackslash = TRUE, BOOL bFormatBackslash = TRUE)
+        {
+            CString strPath = szPath;
+            if (bFormatBackslash)
+            {
+                strPath.Replace(_T('/'), _T('\\'));
+            }
+
+            TCHAR buffer[MAX_PATH + 1] = { 0 };
+            if (::PathCanonicalize(buffer, strPath))
+            {
+                strPath = buffer;
+            }
+
+            if (bUniqueBackslash)
+            {
+                int len = strPath.GetLength();
+                for (int i = 0; i < len; i++)
+                {
+                    if (0 == strPath.Replace(_T("\\\\"), _T("\\")))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return strPath;
+        }
+
+        /**
+         * @brief 计算2个路径的相对路径
+         * @param[in] pszFrom 源路径，生成的相对路径的基路径
+         * @param[in] pszTo 目标路径，生成的相对路径，会以源路径为基路径计算，得到目标路径的相对位置
+         * @param[in] dwAttrFrom 路径属性，如果是文件夹，请使用FILE_ATTRIBUTE_DIRECTORY
+         * @param[in] dwAttrTo 路径属性，如果是文件夹，请使用FILE_ATTRIBUTE_DIRECTORY
+         * @return 返回计算得到的相对路径
+         */
+        static CString PathRelativePathTo(LPCTSTR pszFrom, LPCTSTR pszTo, DWORD dwAttrFrom = FILE_ATTRIBUTE_NORMAL, DWORD dwAttrTo = FILE_ATTRIBUTE_NORMAL)
+        {
+            CString strOut;
+            TCHAR szBuffer[MAX_PATH + 1] = { 0 };
+            if (::PathRelativePathTo(szBuffer, pszFrom, dwAttrFrom, pszTo, dwAttrTo))
+            {
+                strOut = szBuffer;
+            }
+
+            return strOut;
         }
     };
-
 }
 }

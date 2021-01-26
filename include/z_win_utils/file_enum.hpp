@@ -51,8 +51,7 @@ namespace WinUtils
             if (!lpDirName || !lpPost)
                 return;
 
-            CString strSearch(lpDirName);
-            ZLPath::PathAddBackslash(strSearch);
+            CString strSearch = ZLPath::PathAddBackslash(lpDirName);
             m_strDir = strSearch;
             strSearch.Append(lpPost);
 

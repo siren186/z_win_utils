@@ -43,7 +43,9 @@ namespace WinUtils
         static BOOL CreateDeepDirectory(LPCTSTR lpPath)
         {
             if (!lpPath)
+            {
                 return FALSE;
+            }
 
             BOOL bRetCode = FALSE;
             CString strPath(lpPath);
@@ -52,7 +54,7 @@ namespace WinUtils
             bRetCode = ::CreateDirectory(lpPath, NULL);
             if (!bRetCode && ::GetLastError() != ERROR_ALREADY_EXISTS)
             {
-                ZLPath::PathRemoveFileSpec(strPath);
+                strPath = ZLPath::PathToParentDir(strPath);
                 if (strPath.IsEmpty()) return FALSE;
 
                 bRetCode = CreateDeepDirectory(strPath);
@@ -75,46 +77,59 @@ namespace WinUtils
         static BOOL DeleteDirectory(LPCTSTR lpDir, BOOL bContinueWhenFail = TRUE)
         {
             if (!lpDir)
+            {
                 return FALSE;
+            }
 
             BOOL bReturn = FALSE;
-            CString sDir(lpDir);
+            CString strDir = ZLPath::PathAddBackslash(lpDir);
             CString sFindPath;
+            sFindPath.Format(_T("%s*.*"), strDir);
             WIN32_FIND_DATA fData;
-            HANDLE hFind = INVALID_HANDLE_VALUE;
-            ZLPath::PathAddBackslash(sDir);
-            sFindPath.Format(_T("%s*.*"), sDir);
-            hFind = ::FindFirstFile(sFindPath, &fData);
+            HANDLE hFind = ::FindFirstFile(sFindPath, &fData);
             if (hFind == INVALID_HANDLE_VALUE)
-                goto Exit0;
-            do 
             {
-                if (0 == _tcscmp(fData.cFileName, _T(".")) ||
-                    0 == _tcscmp(fData.cFileName, _T("..")))
+                goto Exit0;
+            }
+
+            do
+            {
+                if (0 == _tcscmp(fData.cFileName, _T(".")) || 0 == _tcscmp(fData.cFileName, _T("..")))
+                {
                     continue;
+                }
+
                 if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
                     CString sSubfolder;
-                    sSubfolder.Format(_T("%s%s\\"), sDir, fData.cFileName);
+                    sSubfolder.Format(_T("%s%s\\"), strDir, fData.cFileName);
                     if ((FALSE == DeleteDirectory(sSubfolder, bContinueWhenFail)) && (!bContinueWhenFail))
+                    {
                         goto Exit0;
+                    }
                 }
-                else 
+                else
                 {
                     CString sFileName = fData.cFileName;
                     sFileName.MakeLower();
-                    if ((FALSE == ::DeleteFile(sDir + sFileName)) && (!bContinueWhenFail))
+                    if ((FALSE == ::DeleteFile(strDir + sFileName)) && (!bContinueWhenFail))
+                    {
                         goto Exit0;
+                    }
                 }
             } while (::FindNextFile(hFind, &fData) != 0);
+
             bReturn = TRUE;
+
 Exit0:
             if (hFind != INVALID_HANDLE_VALUE)
+            {
                 ::FindClose(hFind);
-            ::RemoveDirectory(sDir);
-            ZLPath::PathRemoveBackslash(sDir);
-            ::RemoveDirectory(sDir);
+            }
 
+            ::RemoveDirectory(strDir);
+            strDir = ZLPath::PathRemoveBackslash(strDir);
+            ::RemoveDirectory(strDir);
             return bReturn;
         }
 
@@ -129,49 +144,58 @@ Exit0:
         static int CopyDirectory(LPCTSTR lpSrcDir, LPCTSTR lpDstDir, BOOL bCoverFile = TRUE)
         {
             if (!lpSrcDir || !lpDstDir)
+            {
                 return 0;
+            }
 
             int nReturn = 0;
-            CString strFind;
             CString strSubFile;
             CString strSubDstFile;
-            CString strSrcDir(lpSrcDir);
-            CString strDstDir(lpDstDir);
-            WIN32_FIND_DATA FindFileData;
-            HANDLE hFind = INVALID_HANDLE_VALUE;
-            ZLPath::PathAddBackslash(strSrcDir);
-            ZLPath::PathAddBackslash(strDstDir);
+            CString strSrcDir = ZLPath::PathAddBackslash(lpSrcDir);
+            CString strDstDir = ZLPath::PathAddBackslash(lpDstDir);
             CreateDeepDirectory(strDstDir);
+
+            CString strFind;
             strFind.Format(_T("%s*.*"), strSrcDir);
-            hFind = ::FindFirstFile(strFind, &FindFileData);
+            WIN32_FIND_DATA fData;
+            HANDLE hFind = ::FindFirstFile(strFind, &fData);
             if (hFind == INVALID_HANDLE_VALUE)
+            {
                 goto Exit0;
+            }
+
             do 
             {
-                if (_tcscmp(FindFileData.cFileName, _T(".")) == 0
-                    || _tcscmp(FindFileData.cFileName, _T("..")) == 0)
-                    continue;
-
-                if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                if (_tcscmp(fData.cFileName, _T(".")) == 0 || _tcscmp(fData.cFileName, _T("..")) == 0)
                 {
-                    strSubFile.Format(_T("%s%s\\"), strSrcDir, FindFileData.cFileName);
-                    strSubDstFile.Format(_T("%s%s\\"), strDstDir, FindFileData.cFileName);
+                    continue;
+                }
+
+                if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                {
+                    strSubFile.Format(_T("%s%s\\"), strSrcDir, fData.cFileName);
+                    strSubDstFile.Format(_T("%s%s\\"), strDstDir, fData.cFileName);
 
                     CreateDeepDirectory(strSubDstFile);
                     nReturn += CopyDirectory(strSubFile, strSubDstFile, !bCoverFile);
                 }
                 else
                 {
-                    strSubFile.Format(_T("%s%s"), strSrcDir, FindFileData.cFileName);
-                    strSubDstFile.Format(_T("%s%s"), strDstDir, FindFileData.cFileName);
+                    strSubFile.Format(_T("%s%s"), strSrcDir, fData.cFileName);
+                    strSubDstFile.Format(_T("%s%s"), strDstDir, fData.cFileName);
 
                     if (!::CopyFile(strSubFile, strSubDstFile, !bCoverFile))
+                    {
                         nReturn++;
+                    }
                 }
-            } while (::FindNextFile(hFind, &FindFileData) != 0);
+            } while (::FindNextFile(hFind, &fData) != 0);
+
 Exit0:
             if (hFind != INVALID_HANDLE_VALUE)
+            {
                 ::FindClose(hFind);
+            }
             return nReturn;
         }
     };

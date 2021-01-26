@@ -57,7 +57,7 @@ namespace WinUtils
             {
                 if (!RegInfo.bIsFile)
                 {
-                    ZLPath::PathAddBackslash(sValue);
+                    sValue = ZLPath::PathAddBackslash(sValue);
                     sValue += RegInfo.strFileName;
                 }
 
