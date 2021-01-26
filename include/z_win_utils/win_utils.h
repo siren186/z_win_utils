@@ -63,9 +63,12 @@
 #include "split_str.hpp"
 #include "software_check.hpp"
 #include "str_conv.hpp"
-#include "system_info.h"
-#include "com_init.h"
-#include "aes.hpp"
+#include "system_info.hpp"
+#include "com_init.hpp"
+#include "wmi_query.hpp"
+#include "buffer.hpp"
+#include "file_operation.hpp"
+#include "private_heap.hpp"
 
 #ifdef _GDIPLUS_H
 #include "gdiplus.hpp"
