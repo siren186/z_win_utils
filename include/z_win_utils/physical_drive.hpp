@@ -606,6 +606,7 @@ Exit0:
     HRESULT SetDriveLayoutEx(const DriveLayoutInfoEx& layout)
     {
         HRESULT hr = E_FAIL;
+        DWORD junk = 0;
         const int LEN = sizeof(DRIVE_LAYOUT_INFORMATION_EX) + sizeof(PARTITION_INFORMATION_EX) * (layout.PartitionEntry.GetCount() - 1);
         DRIVE_LAYOUT_INFORMATION_EX* pLayoutEx = (DRIVE_LAYOUT_INFORMATION_EX*)malloc(LEN);
 
@@ -637,7 +638,6 @@ Exit0:
             pLayoutEx->PartitionEntry[i] = layout.PartitionEntry.GetAt(i);
         }
 
-        DWORD junk = 0;
         hr = Ioctl(IOCTL_DISK_SET_DRIVE_LAYOUT_EX, pLayoutEx, LEN, NULL, 0, &junk);
 
 Exit0:
@@ -997,7 +997,8 @@ Exit0:
             DWORD dwLastError = ::GetLastError();
             if (dwLastError == ERROR_MORE_DATA)
             {
-                mountPointsBuffer = CAutoVectorPtr<TCHAR>(new TCHAR[realMountPointCount]);
+                CAutoVectorPtr<TCHAR> tmp(new TCHAR[realMountPointCount]);
+                mountPointsBuffer = tmp;
                 ZeroMemory(mountPointsBuffer, realMountPointCount * sizeof(TCHAR));
             }
             else
