@@ -261,7 +261,7 @@ namespace WinUtils
             ULONG UniqueProcessId;
             ULONG InheritedFromUniqueProcessId;
         } ZL_PROCESS_BASIC_INFORMATION;
-		
+
         //////////////////////////////////////////////////////////////////////////
 
         // NtQueryInformationProcess for pure 32 and 64-bit processes
@@ -498,8 +498,8 @@ namespace WinUtils
             if (wow)
             {
                 // we're running as a 32-bit process in a 64-bit OS
-                PROCESS_BASIC_INFORMATION_WOW64 pbi;
-                ZeroMemory(&pbi, sizeof(pbi));
+                PROCESS_BASIC_INFORMATION_WOW64 pbiWow64;
+                ZeroMemory(&pbiWow64, sizeof(pbiWow64));
 
                 // get process information from 64-bit world
                 _NtQueryInformationProcess query = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtWow64QueryInformationProcess64");
@@ -509,7 +509,7 @@ namespace WinUtils
                     return cmdLine;
                 }
 
-                err = query(hProcess, 0, &pbi, sizeof(pbi), NULL);
+                err = query(hProcess, 0, &pbiWow64, sizeof(pbiWow64), NULL);
                 if (err != 0)
                 {
                     CloseHandle(hProcess);
@@ -524,7 +524,7 @@ namespace WinUtils
                     return cmdLine;
                 }
 
-                err = read(hProcess, pbi.PebBaseAddress, peb, pebSize, NULL);
+                err = read(hProcess, pbiWow64.PebBaseAddress, peb, pebSize, NULL);
                 if (err != 0)
                 {
                     CloseHandle(hProcess);
@@ -555,8 +555,8 @@ namespace WinUtils
             else
             {
                 // we're running as a 32-bit process in a 32-bit OS, or as a 64-bit process in a 64-bit OS
-                PROCESS_BASIC_INFORMATION pbi;
-                ZeroMemory(&pbi, sizeof(pbi));
+                PROCESS_BASIC_INFORMATION pbiWow32;
+                ZeroMemory(&pbiWow32, sizeof(pbiWow32));
 
                 // get process information
                 _NtQueryInformationProcess query = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
@@ -566,7 +566,7 @@ namespace WinUtils
                     return cmdLine;
                 }
 
-                err = query(hProcess, 0, &pbi, sizeof(pbi), NULL);
+                err = query(hProcess, 0, &pbiWow32, sizeof(pbiWow32), NULL);
                 if (err != 0)
                 {
                     CloseHandle(hProcess);
@@ -574,7 +574,7 @@ namespace WinUtils
                 }
 
                 // read PEB
-                if (!ReadProcessMemory(hProcess, pbi.PebBaseAddress, peb, pebSize, NULL))
+                if (!ReadProcessMemory(hProcess, pbiWow32.PebBaseAddress, peb, pebSize, NULL))
                 {
                     CloseHandle(hProcess);
                     return cmdLine;
