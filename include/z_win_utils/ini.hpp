@@ -94,13 +94,13 @@ namespace WinUtils
 
         DWORD GetPathName(LPTSTR lpBuffer, DWORD dwBufSize) const
         {
-            *lpBuffer = _T('\0');
             DWORD dwLen = 0;
             if (lpBuffer != NULL)
             {
                 wcsncpy(lpBuffer, mpsPathName, dwBufSize);
                 dwLen = (DWORD)_tcslen(lpBuffer);
-            }else
+            }
+            else
             {
                 dwLen = (DWORD)_tcslen(mpsPathName);
             }
