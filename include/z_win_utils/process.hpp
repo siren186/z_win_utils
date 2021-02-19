@@ -20,6 +20,7 @@
 
 
 #pragma once
+#include <atlbase.h>
 #include "win_utils_header.h"
 #include "dos_name.hpp"
 
@@ -486,12 +487,12 @@ namespace WinUtils
 
             // read basic info to get ProcessParameters address, we only need the beginning of PEB
             DWORD pebSize = ProcessParametersOffset + 8;
-            PBYTE peb = (PBYTE)malloc(pebSize);
+            CAutoVectorPtr<char> peb(new char[pebSize]);
             ZeroMemory(peb, pebSize);
 
             // read basic info to get CommandLine address, we only need the beginning of ProcessParameters
             DWORD ppSize = CommandLineOffset + 16;
-            PBYTE pp = (PBYTE)malloc(ppSize);
+            CAutoVectorPtr<char> pp(new char[ppSize]);
             ZeroMemory(pp, ppSize);
 
             if (wow)
