@@ -979,6 +979,23 @@ Exit0:
     }
 
     /**
+     * 获取模块所在的磁盘索引号
+     * @param[out] diskNumber 获取到的模块所在磁盘索引号
+     * @param[in] hModule 模块句柄
+     * @return 成功返回S_OK
+     */
+    static HRESULT GetModuleDiskNumber(DWORD& diskNumber, HMODULE hModule = NULL)
+    {
+        TCHAR fullpath[MAX_PATH + 1] = { 0 };
+        DWORD dwRet = ::GetModuleFileName(hModule, fullpath, MAX_PATH);
+        if (dwRet)
+        {
+            return DiskLetterToDiskNumber(fullpath[0], diskNumber);
+        }
+        return AtlHresultFromLastError();
+    }
+
+    /**
      * @brief 获取卷标对应的盘符
      * @param[in] volumeNames 卷标名称，示例：\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
      * @param[out] diskLetter 获取到的盘符
