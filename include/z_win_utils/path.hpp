@@ -37,7 +37,7 @@ namespace WinUtils
          * @param[in] hModule 模块句柄
          * @return 成功返回模块全路径, 失败返回空串
          */
-        static CString GetModuleFullPath(HMODULE hModule)
+        static CString GetModuleFullPath(HMODULE hModule = NULL)
         {
             TCHAR szFileName[MAX_PATH + 1] = { 0 };
             DWORD dwRet = ::GetModuleFileName(hModule, szFileName, MAX_PATH);
@@ -109,7 +109,7 @@ namespace WinUtils
          * @param[in] hModule 模块句柄
          * @return 成功返回文件夹路径名, 失败返回空串
          */
-        static CString GetModuleDir(HMODULE hModule)
+        static CString GetModuleDir(HMODULE hModule = NULL)
         {
             return PathToParentDir(GetModuleFullPath(hModule));
         }
