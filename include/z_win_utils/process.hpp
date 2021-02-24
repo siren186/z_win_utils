@@ -607,31 +607,51 @@ namespace WinUtils
 
         /**
          * @brief 创建进程
-         * @param[in] pszPath         可执行文件路径
-         * @param[in] pszCmd          命令行
-         * @param[in] dwWaitTime      等待时间，默认为零
-         * @param[in] bShow           进程是否显示，默认显示
-         * @param[in] hToken          Token句柄，默认为NULL
-         * @param[in] dwCreationFlags 进程创建标示，默认为零
+         * @param[in] szExePath         可执行文件路径
+         * @param[in] szCmd             命令行参数
+         * @param[in] dwWaitTime        等待进程退出时间
+         * @param[in] bShow             是否显示进程界面
+         * @param[in] hToken            Token句柄，默认为NULL
+         * @param[in] bInheritHandle    是否继承
+         * @param[in] dwCreationFlags   进程创建标示，默认为零
+         * @param[in] hStdInput         重定向标准输入，默认为NULL
+         * @param[in] hStdOutput        重定向标准输出，默认为NULL
+         * @param[in] hStdError         重定向错误输出，默认为NULL
          * @return 返回进程的退出代码
          * @see CreateProcess CreateProcessAsUser
          */
-        static DWORD Run(LPCTSTR pszPath,
-            LPCTSTR pszCmd,
-            DWORD dwWaitTime = 0,
-            BOOL bShow = TRUE,
-            HANDLE hToken = NULL,
-            DWORD dwCreationFlags = 0)
+        static DWORD Run(
+            LPCTSTR szExePath,
+            LPCTSTR szCmd,
+            DWORD   dwWaitTime = 0,
+            BOOL    bShow = TRUE,
+            HANDLE  hToken = NULL,
+            BOOL    bInheritHandle = FALSE,
+            DWORD   dwCreationFlags = 0,
+            HANDLE  hStdInput = NULL,
+            HANDLE  hStdOutput = NULL,
+            HANDLE  hStdError = NULL)
         {
-            DWORD nReturn = 0;
-            STARTUPINFO si = {0};
-            PROCESS_INFORMATION pi = {0};
+            if (!szExePath || !szExePath)
+            {
+                return -1;
+            }
+
+            DWORD dwExitCode = -1;
+            STARTUPINFO si = { 0 };
+            PROCESS_INFORMATION pi = { 0 };
 
             si.cb = sizeof(si);
-            si.dwFlags = STARTF_USESHOWWINDOW;
-            CString strExePath;
-            strExePath.Format(_T("\"%s\" %s"), pszPath, pszCmd);
 
+            if (hStdInput || hStdOutput || hStdError)
+            {
+                si.dwFlags |= STARTF_USESTDHANDLES;
+                si.hStdInput = hStdInput;
+                si.hStdOutput = hStdOutput;
+                si.hStdError = hStdError;
+            }
+
+            si.dwFlags |= STARTF_USESHOWWINDOW;
             if (bShow)
             {
                 si.wShowWindow = SW_SHOWDEFAULT;
@@ -641,14 +661,18 @@ namespace WinUtils
                 si.wShowWindow = SW_HIDE;
             }
 
-            BOOL bRetCode = FALSE;
-            if (hToken == NULL)
+            CString strExePath;
+            strExePath.Format(_T("\"%s\" %s"), szExePath, szCmd);
+
+            BOOL bSuc = FALSE;
+            if (hToken)
             {
-                bRetCode = ::CreateProcess(NULL,
+                bSuc = ::CreateProcessAsUser(hToken,
+                    NULL,
                     (LPWSTR)(LPCTSTR)strExePath,
                     NULL,
                     NULL,
-                    FALSE,
+                    bInheritHandle,
                     dwCreationFlags,
                     NULL,
                     NULL,
@@ -657,12 +681,11 @@ namespace WinUtils
             }
             else
             {
-                bRetCode = ::CreateProcessAsUser(hToken,
-                    NULL,
+                bSuc = ::CreateProcess(NULL,
                     (LPWSTR)(LPCTSTR)strExePath,
                     NULL,
                     NULL,
-                    FALSE,
+                    bInheritHandle,
                     dwCreationFlags,
                     NULL,
                     NULL,
@@ -670,15 +693,16 @@ namespace WinUtils
                     &pi);
             }
 
-            if (!bRetCode)
+            if (!bSuc)
             {
                 goto Exit;
             }
+
             if (0 != dwWaitTime)
             {
                 ::WaitForSingleObject(pi.hProcess, dwWaitTime);
             }
-            ::GetExitCodeProcess(pi.hProcess, &nReturn);
+            ::GetExitCodeProcess(pi.hProcess, &dwExitCode);
 
         Exit:
             if (pi.hProcess != NULL)
@@ -691,7 +715,82 @@ namespace WinUtils
                 ::CloseHandle(pi.hThread);
                 pi.hThread = NULL;
             }
-            return nReturn;
+            return dwExitCode;
+        }
+
+        /**
+         * @brief 创建进程，并读取进程输出的内容
+         * @param[in] szExePath          可执行文件路径
+         * @param[in] szCmd              命令行参数
+         * @param[in] szBuffer           缓存区，用于存储进程的输出数据
+         * @param[in] dwBufferLen        缓存区大小
+         * @param[in] dwNumberOfByteRead 实际读取到的进程输出数据大小
+         * @param[in] dwWaitTime         等待进程退出时间
+         * @param[in] bShow              是否显示进程界面
+         * @param[in] hToken             Token句柄，默认为NULL
+         * @param[in] dwCreationFlags    进程创建标示，默认为零
+         * @return 返回进程的退出代码
+         * @see CreateProcess CreateProcessAsUser
+         */
+        static DWORD Run(
+            LPCTSTR szExePath,
+            LPCTSTR szCmd,
+            LPSTR   szBuffer,
+            DWORD   dwBufferLen,
+            DWORD&  dwNumberOfByteRead,
+            DWORD   dwWaitTime = INFINITE,
+            BOOL    bShow = TRUE,
+            HANDLE  hToken = NULL,
+            DWORD   dwCreationFlags = 0)
+        {
+            // 先将读取到的字节数置0
+            dwNumberOfByteRead = 0;
+
+            // 参数判断
+            if (!szExePath || !szCmd || !szBuffer || 0 == dwBufferLen)
+            {
+                return -1;
+            }
+
+            SECURITY_ATTRIBUTES sa = { 0 };
+            sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+            sa.lpSecurityDescriptor = NULL;
+            sa.bInheritHandle = TRUE;
+
+            CHandle hPipeRead;
+            CHandle hPipeWrite;
+            if (!::CreatePipe(&hPipeRead.m_h, &hPipeWrite.m_h, &sa, dwBufferLen))
+            {
+                return -1;
+            }
+
+            DWORD dwExitCode = Run(
+                szExePath,
+                szCmd,
+                dwWaitTime,
+                bShow,
+                hToken,
+                TRUE,
+                dwCreationFlags,
+                NULL,
+                hPipeWrite,
+                hPipeWrite);
+
+            DWORD dwPipeCacheLen = 0;
+            if (::PeekNamedPipe(hPipeRead, NULL, 0, NULL, &dwPipeCacheLen, NULL) && dwPipeCacheLen > 0)
+            {
+                if (dwPipeCacheLen > dwBufferLen)
+                {
+                    dwPipeCacheLen = dwBufferLen;
+                }
+
+                if (!::ReadFile(hPipeRead, szBuffer, dwPipeCacheLen, &dwNumberOfByteRead, NULL))
+                {
+                    dwNumberOfByteRead = 0;
+                }
+            }
+
+            return dwExitCode;
         }
 
     private:
