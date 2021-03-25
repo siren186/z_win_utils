@@ -31,94 +31,85 @@ namespace zl
 {
 namespace WinUtils
 {
-    typedef struct _ZLProcessEnumInfo
-    {
-        _ZLProcessEnumInfo()
-        {
-            dwTh32ProcessID = 0;
-            dwCntThreads = 0;
-            dwTh32ParentProcessID = 0;
-            lpcPriClassBase = 0;
-        }
-        DWORD dwTh32ProcessID;                  ///> 进程ID
-        DWORD dwCntThreads;                     ///> 此进程开启的线程计数
-        DWORD dwTh32ParentProcessID;            ///> 父进程的ID
-        LONG lpcPriClassBase;                   ///> 线程优先权
-        CString cstrExeFile;                    ///> 进程全路径
-    }ZLProcessEnumInfo;
-
-    typedef std::vector<ZLProcessEnumInfo> ZLProcessEnumInfoVec;
     /**
      * @brief 进程枚举
      */
     class ZLProcessEnum
     {
     public:
+
         /**
          * @brief 枚举所有进程
-         * @param[in,out] infoVec 存放所有进程信息的容器
+         * @param[out] vec 枚举到的所有进程列表
          * @return 成功返回TRUE，失败返回FALSE
          */
-        static BOOL Enum(ZLProcessEnumInfoVec& infoVec)
+        static HRESULT Enum(std::vector<PROCESSENTRY32>& vec)
         {
-            infoVec.clear();
-            BOOL bRet = FALSE;
-            HANDLE hSnapProc = INVALID_HANDLE_VALUE;
+            HRESULT hr = S_OK;
+            HANDLE hSnapshot = INVALID_HANDLE_VALUE;
+
+            vec.clear();
+
             do
             {
-                hSnapProc = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-                if (INVALID_HANDLE_VALUE == hSnapProc)
+                hSnapshot = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+                if (INVALID_HANDLE_VALUE == hSnapshot)
                 {
+                    DWORD dwErr = ::GetLastError();
+                    hr = HRESULT_FROM_WIN32(dwErr);
                     break;
                 }
 
                 PROCESSENTRY32 pe32 = {0};
                 pe32.dwSize = sizeof(pe32);
-                if (!::Process32FirstW(hSnapProc, &pe32))
+                if (!::Process32First(hSnapshot, &pe32))
                 {
                     break;
                 }
 
                 do
                 {
-                    ZLProcessEnumInfo proInfo;
-                    proInfo.dwTh32ProcessID = pe32.th32ProcessID;
-                    proInfo.dwCntThreads = pe32.cntThreads;
-                    proInfo.dwTh32ParentProcessID = pe32.th32ParentProcessID;
-                    proInfo.lpcPriClassBase = pe32.pcPriClassBase;
-                    proInfo.cstrExeFile = pe32.szExeFile;
-                    infoVec.push_back(proInfo);
-                } while (::Process32NextW(hSnapProc, &pe32));
-                bRet = TRUE;
+                    vec.push_back(pe32);
+                } while (::Process32Next(hSnapshot, &pe32));
             } while (FALSE);
-            if (hSnapProc != INVALID_HANDLE_VALUE)
+
+            if (hSnapshot != INVALID_HANDLE_VALUE)
             {
-                ::CloseHandle(hSnapProc);
+                ::CloseHandle(hSnapshot);
             }
-            return bRet;
+
+            return hr;
         }
 
         /**
          * @brief 判断指定进程是否存在
-         * @param[in] lpFileName 进程文件名
-         * @return 存在返回TRUE，不存在返回FALSE，枚举进程失败返回FALSE
+         * @param[in] lpFileName 进程文件名(不包含路径)，不区分大小写
+         * @param[out] pInfo 被匹配中的进程基本信息
+         * @return 存在返回TRUE，不存在返回FALSE
+         * @attention 如果有多个进程与之匹配时，仅返回第一个与之匹配的进程信息
          */
-        static BOOL IsProcExist(LPCWSTR lpFileName)
+        static BOOL IsProcessExist(LPCTSTR lpFileName, PROCESSENTRY32* pInfo = NULL)
         {
-            BOOL bExist = FALSE;
-            ZLProcessEnumInfoVec vecProc;
-            ZLProcessEnum::Enum(vecProc);
-            for (ZLProcessEnumInfoVec::const_iterator it = vecProc.begin();
-                it != vecProc.end();
-                ++it)
+            if (!lpFileName)
             {
-                if (ZLPath::PathToFileName(it->cstrExeFile).CompareNoCase(lpFileName) == 0)
+                return FALSE;
+            }
+
+            std::vector<PROCESSENTRY32> vec;
+            ZLProcessEnum::Enum(vec);
+            for (std::vector<PROCESSENTRY32>::const_iterator it = vec.begin(); it != vec.end(); ++it)
+            {
+                if (0 == ::StrCmpI(lpFileName, it->szExeFile))
                 {
-                    bExist = TRUE;
-                    break;
+                    if (pInfo)
+                    {
+                        *pInfo = *it;
+                    }
+                    return TRUE;
                 }
             }
-            return bExist;
+
+            return FALSE;
         }
     };
 }
