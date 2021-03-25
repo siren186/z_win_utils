@@ -253,7 +253,17 @@ Exit0:
     {
         UnlockVolume(-1);
         m_file.Close();
+
+        // 清空所有成员变量
         m_bStoragePropertyQueried = FALSE;
+        m_diskNumber = -1;
+        m_diskModel.Empty();
+        m_diskSerialNumber.Empty();
+        m_diskBusType = BusTypeUnknown;
+        m_diskVendorId.Empty();
+        m_diskProductId.Empty();
+        m_diskProductRevision.Empty();
+        m_lockedVolumes.clear();
     }
 
     HRESULT Seek(LONGLONG nOffset, DWORD dwFrom = FILE_BEGIN)
