@@ -22,6 +22,7 @@
 #pragma once
 #include "win_utils_header.h"
 #include "path.hpp"
+#include <stack>
 
 namespace zl
 {
@@ -34,6 +35,15 @@ namespace WinUtils
     class ZLDirectory
     {
     public:
+
+        /**
+         * @brief 遍历文件夹时的回调函数
+         * @param[in] filepath 遍历到的文件路径
+         * @param[in] param 回调函数的附加参数
+         * @return 返回false时将停止遍历
+         */
+        typedef bool(*WalkDirectoryCallback)(LPCTSTR filepath, LPVOID param);
+
         /**
          * @brief 创建目录
          * @param[in] szPath 路径
@@ -214,7 +224,79 @@ Exit0:
             }
             return FALSE;
         }
-    };
 
+        /**
+         * @brief 以非递归的方式遍历文件夹及其所有的子文件夹
+         * @param[in] lpDir 要遍历的文件夹路径
+         * @param[in] callback 回调接口
+         * @param[in] param 回调接口的附加参数
+         * @return 成功返回TRUE
+         */
+        static BOOL WalkDirectory(LPCTSTR lpDir, WalkDirectoryCallback callback, LPVOID param = NULL)
+        {
+            if (!lpDir || !callback)
+            {
+                return FALSE;
+            }
+
+            CString szRootDir = ZLPath::PathAddBackslash(lpDir);
+            std::stack<CString> dirStack;
+            dirStack.push(szRootDir);
+
+            while (!dirStack.empty())
+            {
+                CString curDir = dirStack.top();
+                dirStack.pop();
+
+                WIN32_FIND_DATA wfd = { 0 };
+                HANDLE hFind = FindFirstFile(curDir + "*", &wfd);
+                if (INVALID_HANDLE_VALUE == hFind)
+                {
+                    continue;
+                }
+
+                if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
+                    0 != StrCmp(wfd.cFileName, TEXT("..")))
+                {
+                    if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                    {
+                        dirStack.push(curDir + wfd.cFileName + "\\");
+                    }
+                    else
+                    {
+                        if (!callback(curDir + wfd.cFileName, param))
+                        {
+                            return TRUE;
+                        }
+                    }
+                }
+
+                while (FindNextFile(hFind, &wfd))
+                {
+                    if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
+                        0 != StrCmp(wfd.cFileName, TEXT("..")))
+                    {
+                        if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                        {
+                            dirStack.push(curDir + wfd.cFileName + "\\");
+                        }
+                        else
+                        {
+                            if (!callback(curDir + wfd.cFileName, param))
+                            {
+                                return TRUE;
+                            }
+                        }
+                    }
+                }
+
+                if (INVALID_HANDLE_VALUE != hFind)
+                {
+                    ::FindClose(hFind);
+                }
+            }
+            return TRUE;
+        }
+    }; // end of class ZLDirectory
 }
 }
