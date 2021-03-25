@@ -265,7 +265,7 @@ namespace WinUtils
         //////////////////////////////////////////////////////////////////////////
 
         // NtQueryInformationProcess for pure 32 and 64-bit processes
-        typedef NTSTATUS(NTAPI *_NtQueryInformationProcess)(
+        typedef LONG (WINAPI *_NtQueryInformationProcess)(
             IN HANDLE ProcessHandle,
             ULONG ProcessInformationClass,
             OUT PVOID ProcessInformation,
@@ -273,7 +273,7 @@ namespace WinUtils
             OUT PULONG ReturnLength OPTIONAL
             );
 
-        typedef NTSTATUS(NTAPI *_NtReadVirtualMemory)(
+        typedef LONG (WINAPI *_NtReadVirtualMemory)(
             IN HANDLE ProcessHandle,
             IN PVOID BaseAddress,
             OUT PVOID Buffer,
@@ -281,7 +281,7 @@ namespace WinUtils
             OUT PSIZE_T NumberOfBytesRead);
 
         // NtQueryInformationProcess for 32-bit process on WOW64
-        typedef NTSTATUS(NTAPI *_NtWow64ReadVirtualMemory64)(
+        typedef LONG(WINAPI *_NtWow64ReadVirtualMemory64)(
             IN HANDLE ProcessHandle,
             IN PVOID64 BaseAddress,
             OUT PVOID Buffer,
