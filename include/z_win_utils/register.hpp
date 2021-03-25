@@ -22,6 +22,7 @@
 #pragma once
 #include "win_utils_header.h"
 #include <shlwapi.h>
+#include <vector>
 
 namespace zl
 {
