@@ -80,6 +80,37 @@ namespace WinUtils
         }
 
         /**
+         * @brief 移除文件名
+         * @param[in] szPath 
+         * @return 返回文件名被移除后的路径
+         */
+        static CString PathRemoveFileName(LPCTSTR szPath)
+        {
+            int len = lstrlen(szPath);
+            if (len <= 0)
+            {
+                return szPath;
+            }
+
+            int i = len - 1;
+            for (; i >= 0; --i)
+            {
+                if (_T('\\') == szPath[i] || _T('/') == szPath[i])
+                {
+                    break;
+                }
+            }
+
+            if (i < (len - 1))
+            {
+                CString str;
+                str.Append(szPath, i + 1);
+                return str;
+            }
+            return szPath;
+        }
+
+        /**
          * @brief 获取父文件夹路径
          * @param[in] szPath 文件全路径
          * @return 成功返回文件夹路径名, 失败返回空串

@@ -45,8 +45,12 @@ namespace WinUtils
          */
         static BOOL EnsureFileDir(LPCTSTR filePath)
         {
-            CString destDir(filePath);
-            ZLPath::PathRemoveFileSpec(destDir);
+            CString destDir = ZLPath::PathRemoveFileName(filePath);
+            if (destDir.IsEmpty())
+            {
+                return FALSE;
+            }
+
             if (!::PathFileExists(destDir))
             {
                 if (!ZLDirectory::CreateDeepDirectory(destDir))
@@ -54,11 +58,8 @@ namespace WinUtils
                     return FALSE;
                 }
             }
-            if (!ZLDirectory::IsDirectory(destDir))
-            {
-                return FALSE;
-            }
-            return TRUE;
+
+            return ZLDirectory::IsDirectory(destDir);
         }
 
         /**
@@ -195,7 +196,7 @@ namespace WinUtils
                 return FALSE;
             }
             CString destFile(filePath);
-            ZLPath::PathRemoveFileSpec(destFile);
+            destFile = ZLPath::PathToParentDir(filePath);
             destFile += newFileName;
             if (::PathFileExists(destFile))
             {
@@ -205,35 +206,39 @@ namespace WinUtils
         }
 
         /**
-         * @brief 寻找未被占用的文件名
-         * @param[in,out] filePath 路径
-         * @param[in] nameFormat 重命名的格式，%s为文件名，%d为尝试的后缀数字，默认为Windows格式
-         * @return 成功返回TRUE，失败返回FALSE
-         * @see 
+         * @brief 查找一个未被使用的文件名。可以指定文件名的命名规则
+         * @param[in] dir 指定在哪个文件夹下查找
+         * @param[in] prefix 文件名前半部分，不包含后缀
+         * @param[in] format 格式化字符串，必须先有%s后有%d。示例："%s_%d.txt"
+         * @param[in] base 递增量的起始值
+         * @return 如果成功返回未被使用的文件路径。如果失败，返回空
          */
-        static BOOL EnsureFileName(CString& filePath,LPCTSTR nameFormat=L"%s_(%d)")
+        static CString EnsureFileName(LPCTSTR dir, LPCTSTR prefix, LPCTSTR format = _T("%s_(%d)"), int base = 0)
         {
-            CString dir(ZLPath::PathToFolderPath(filePath));
-            CString fileNameExt(ZLPath::PathToFileName(filePath));
-            CString fileName(ZLPath::FileNameRemoveSuffix(fileNameExt));
-            CString ext(ZLPath::PathToSuffix(fileNameExt));
-            int count = 1;
-            while (::PathFileExists(filePath))
+            if (!dir || !prefix || !format)
             {
-                CString newFileName;
-                newFileName.Format(nameFormat,fileName, ++count);
-                filePath.Format(L"%s\\%s", dir, newFileName);
-                if (!ext.IsEmpty())
+                return _T("");
+            }
+
+            CString strUnusedPath;
+            CString filename;
+            CString strDir = ZLPath::PathAddBackslash(dir);
+            if (strDir.IsEmpty())
+            {
+                return _T("");
+            }
+
+            for (int i = base; i < INT_MAX; i++)
+            {
+                filename.Format(format, prefix, i);
+                strUnusedPath = strDir + filename;
+                if (FALSE == ::PathFileExists(strUnusedPath))
                 {
-                    filePath += L'.';
-                    filePath += ext;
-                }
-                if (count == INT_MAX)
-                {
-                    return FALSE;
+                    return strUnusedPath;
                 }
             }
-            return TRUE;
+
+            return _T("");
         }
 
         /**
@@ -267,26 +272,36 @@ namespace WinUtils
          * @return 成功返回TRUE，失败返回FALSE
          * @see 
          */
-        static BOOL RenameDeleteFile(CString& filePath, BOOL rebootDelete)
+        static BOOL RenameDeleteFile(LPCTSTR filepath, BOOL rebootDelete = TRUE)
         {
-            if (::DeleteFile(filePath))
+            if (!filepath)
+            {
+                return FALSE;
+            }
+
+            if (::DeleteFile(filepath))
             {
                 return TRUE;
             }
-            CString newName(filePath);
-            if (!EnsureFileName(newName))
+
+            CString dir = ZLPath::PathToParentDir(filepath);
+            CString oldName = ZLPath::PathToFileName(filepath);
+            CString newName = EnsureFileName(dir, oldName);
+            if (newName.IsEmpty())
             {
                 return FALSE;
             }
-            RemoveReadOnly(filePath);
-            if (!::MoveFileEx(filePath, newName, MOVEFILE_REPLACE_EXISTING))
+
+            RemoveReadOnly(filepath);
+            if (!::MoveFileEx(filepath, newName, MOVEFILE_REPLACE_EXISTING))
             {
                 return FALSE;
             }
-            filePath = newName;
+
+            filepath = newName;
             if (rebootDelete)
             {
-                if (!::MoveFileEx(filePath, NULL, MOVEFILE_DELAY_UNTIL_REBOOT))
+                if (!::MoveFileEx(filepath, NULL, MOVEFILE_DELAY_UNTIL_REBOOT))
                 {
                     return FALSE;
                 }
@@ -310,10 +325,10 @@ namespace WinUtils
             ZLDirectory::DeleteDirectory(dir);
             ZLFileEnum enumer(dir);
             int fileCount = enumer.GetFileCount();
-            for (int n=0; n<fileCount; ++n)
+            for (int n = 0; n < fileCount; ++n)
             {
                 CString fileName(enumer.GetFileName(n));
-                RenameDeleteFile(fileName,rebootDelete);
+                RenameDeleteFile(fileName, rebootDelete);
             }
         }
     };
