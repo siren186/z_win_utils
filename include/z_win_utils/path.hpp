@@ -57,26 +57,18 @@ namespace WinUtils
          */
         static CString PathToFileName(LPCTSTR szPath)
         {
-            int len = lstrlen(szPath);
-            int i = len - 1;
-            for (; i >= 0; --i)
+            CString strPath = ZLPath::PathRemoveBackslash(szPath);
+            int pos = strPath.ReverseFind(_T('\\'));
+            if (-1 == pos)
             {
-                if (_T('\\') == szPath[i] || _T('/') == szPath[i])
-                {
-                    break;
-                }
+                pos = strPath.ReverseFind(_T('/'));
             }
 
-            CString filename;
-            if (i > 0)
+            if (-1 == pos)
             {
-                filename.Append(&szPath[i + 1]);
+                return strPath;
             }
-            else
-            {
-                filename = szPath;
-            }
-            return filename;
+            return strPath.Mid(pos + 1);
         }
 
         /**
