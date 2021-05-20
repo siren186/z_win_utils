@@ -39,10 +39,11 @@ namespace WinUtils
         /**
          * @brief 遍历文件夹时的回调函数
          * @param[in] filepath 遍历到的文件路径
+         * @param[in] isDirectory 是不是文件夹
          * @param[in] param 回调函数的附加参数
          * @return 返回false时将停止遍历
          */
-        typedef bool(*WalkDirectoryCallback)(LPCTSTR filepath, LPVOID param);
+        typedef bool(*WalkDirectoryCallback)(const WIN32_FIND_DATA* wfd, LPCTSTR parentDir, bool isDirectory, LPVOID param);
 
         /**
          * @brief 创建目录
@@ -249,43 +250,55 @@ Exit0:
                 dirStack.pop();
 
                 WIN32_FIND_DATA wfd = { 0 };
-                HANDLE hFind = FindFirstFile(curDir + "*", &wfd);
+                HANDLE hFind = FindFirstFile(curDir + TEXT("*"), &wfd);
                 if (INVALID_HANDLE_VALUE == hFind)
                 {
                     continue;
                 }
 
-                if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
-                    0 != StrCmp(wfd.cFileName, TEXT("..")))
+                if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 {
-                    if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                    if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
+                        0 != StrCmp(wfd.cFileName, TEXT("..")))
                     {
-                        dirStack.push(curDir + wfd.cFileName + "\\");
+                        CString childDir = curDir + wfd.cFileName + TEXT("\\");
+                        dirStack.push(childDir);
                     }
-                    else
+
+                    if (!callback(&wfd, curDir, true, param)) // 文件夹中包包含了"."和".."路径
                     {
-                        if (!callback(curDir + wfd.cFileName, param))
-                        {
-                            return TRUE;
-                        }
+                        return TRUE;
+                    }
+                }
+                else
+                {
+                    if (!callback(&wfd, curDir, false, param))
+                    {
+                        return TRUE;
                     }
                 }
 
                 while (FindNextFile(hFind, &wfd))
                 {
-                    if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
-                        0 != StrCmp(wfd.cFileName, TEXT("..")))
+                    if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                     {
-                        if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+                        if (0 != StrCmp(wfd.cFileName, TEXT(".")) &&
+                            0 != StrCmp(wfd.cFileName, TEXT("..")))
                         {
-                            dirStack.push(curDir + wfd.cFileName + "\\");
+                            CString childDir = curDir + wfd.cFileName + TEXT("\\");
+                            dirStack.push(childDir);
                         }
-                        else
+
+                        if (!callback(&wfd, curDir, true, param))
                         {
-                            if (!callback(curDir + wfd.cFileName, param))
-                            {
-                                return TRUE;
-                            }
+                            return TRUE;
+                        }
+                    }
+                    else
+                    {
+                        if (!callback(&wfd, curDir, false, param))
+                        {
+                            return TRUE;
                         }
                     }
                 }
