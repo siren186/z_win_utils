@@ -39,11 +39,11 @@ namespace WinUtils
         /**
          * @brief 遍历文件夹时的回调函数
          * @param[in] filepath 遍历到的文件路径
-         * @param[in] isDirectory 是不是文件夹
          * @param[in] param 回调函数的附加参数
          * @return 返回false时将停止遍历
+         * @see 想判断是不是文件夹，可通过wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY判断
          */
-        typedef bool(*WalkDirectoryCallback)(const WIN32_FIND_DATA* wfd, LPCTSTR parentDir, bool isDirectory, LPVOID param);
+        typedef bool(*WalkDirectoryCallback)(const WIN32_FIND_DATA* wfd, LPCTSTR parentDir, LPVOID param);
 
         /**
          * @brief 创建目录
@@ -265,14 +265,14 @@ Exit0:
                         dirStack.push(childDir);
                     }
 
-                    if (!callback(&wfd, curDir, true, param)) // 文件夹中包包含了"."和".."路径
+                    if (!callback(&wfd, curDir, param)) // 文件夹中包包含了"."和".."路径
                     {
                         return TRUE;
                     }
                 }
                 else
                 {
-                    if (!callback(&wfd, curDir, false, param))
+                    if (!callback(&wfd, curDir, param))
                     {
                         return TRUE;
                     }
@@ -289,14 +289,14 @@ Exit0:
                             dirStack.push(childDir);
                         }
 
-                        if (!callback(&wfd, curDir, true, param))
+                        if (!callback(&wfd, curDir, param))
                         {
                             return TRUE;
                         }
                     }
                     else
                     {
-                        if (!callback(&wfd, curDir, false, param))
+                        if (!callback(&wfd, curDir, param))
                         {
                             return TRUE;
                         }

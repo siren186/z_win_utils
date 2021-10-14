@@ -661,8 +661,15 @@ namespace WinUtils
                 si.wShowWindow = SW_HIDE;
             }
 
-            CString strExePath;
-            strExePath.Format(_T("\"%s\" %s"), szExePath, szCmd);
+            CString strExePath = szExePath;
+            if (szCmd)
+            {
+                strExePath.Format(_T("\"%s\" %s"), szExePath, szCmd);
+            }
+            else
+            {
+                strExePath.Format(_T("\"%s\""), szExePath);
+            }
 
             BOOL bSuc = FALSE;
             if (hToken)

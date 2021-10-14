@@ -126,6 +126,52 @@ public:
 
         return result;
     }
+    
+
+    /**
+     * @brief 将容器中的字符串用分隔符拼接在一起
+     * @param[in] container STL容器，如vector,list等
+     * @param[in] split 字符分隔符
+     * @param[in] prefix 每个字符串的前缀字符
+     * @param[in] suffix 每个字符串的后缀字符
+     * @return 返回拼接后的结果
+     * @par 示例
+     * @code
+     *     std::vector<std::string> vec { "hello", "world" };
+     *     std::list<std::wstring> lst { L"hello", L"world" };
+     *     std::string result1 = ZLSplitStr::Join(vec, ',', '\'', '\''); // 返回结果："'hello','world'"
+     * @end_code
+     */
+    template< typename _ContainerT>
+    static typename _ContainerT::value_type Join(
+        const _ContainerT& container,
+        const typename _ContainerT::value_type::value_type& split,
+        const typename _ContainerT::value_type::value_type& prefix,
+        const typename _ContainerT::value_type::value_type& suffix
+    )
+    {
+        auto itBegin = std::begin(container);
+        auto itEnd = std::end(container);
+
+        typename _ContainerT::value_type result;
+        if (itBegin != itEnd)
+        {
+            result.push_back(prefix);
+            result.append(*itBegin);
+            result.push_back(suffix);
+            ++itBegin;
+        }
+
+        for (; itBegin != itEnd; ++itBegin)
+        {
+            result.push_back(split);
+            result.push_back(prefix);
+            result.append(*itBegin);
+            result.push_back(suffix);
+        }
+
+        return result;
+    }
 };
 
 typedef ZLSplitStrT<std::string>  ZLSplitStrA;

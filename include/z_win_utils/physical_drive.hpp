@@ -687,7 +687,7 @@ Exit0:
         }
 
         DWORD diskNumber = 0;
-        HRESULT hr = DiskLetterToDiskNumber(sysDir[0], diskNumber);
+        HRESULT hr = DiskLetterToDiskNumber(sysDir[0], &diskNumber);
         if (FAILED(hr))
         {
             return FALSE;
@@ -701,6 +701,7 @@ Exit0:
      * @param[out] volumeNames 获取到的卷标列表，示例：\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
      * @param[in] bAppendBackblash 是否在卷标尾部后缀反斜杠
      * @attention 若不想打开磁盘，则可直接调用同名的静态函数GetDiskVolumeNames
+     * @see 拿到路径后，可调用系统API：GetVolumeInformation获取详细信息，参数bAppendBackblash需要设为TRUE
      */
     VOID GetDiskVolumeNames(CAtlArray<CString>& volumeNames, BOOL bAppendBackblash = TRUE)
     {
@@ -964,8 +965,15 @@ Exit0:
         return hr;
     }
 
-    // 获取盘符所对应的磁盘索引号
-    static HRESULT DiskLetterToDiskNumber(TCHAR letter, DWORD& diskNumber)
+    /**
+     * @brief 根据盘符获取其对应的磁盘索引号、分区号、设备类型
+     * @param[in] letter 指定要查询的盘符
+     * @param[in] diskNumber 磁盘索引号
+     * @param[in] partitionNumber 分区号
+     * @param[in] deviceType 设备类型
+     * @return 成功返回S_OK
+     */
+    static HRESULT DiskLetterToDiskNumber(TCHAR letter, DWORD* diskNumber, DWORD* partitionNumber = NULL, DEVICE_TYPE* deviceType = NULL)
     {
         CString path;
         path.Format(_T("\\\\.\\%C:"), letter);
@@ -984,7 +992,19 @@ Exit0:
             return AtlHresultFromLastError();
         }
 
-        diskNumber = number.DeviceNumber;
+        if (diskNumber)
+        {
+            *diskNumber = number.DeviceNumber;
+        }
+        if (partitionNumber)
+        {
+            *partitionNumber = number.PartitionNumber;
+        }
+        if (deviceType)
+        {
+            *deviceType = number.DeviceType;
+        }
+
         return S_OK;
     }
 
@@ -1000,7 +1020,7 @@ Exit0:
         DWORD dwRet = ::GetModuleFileName(hModule, fullpath, MAX_PATH);
         if (dwRet)
         {
-            return DiskLetterToDiskNumber(fullpath[0], diskNumber);
+            return DiskLetterToDiskNumber(fullpath[0], &diskNumber);
         }
         return AtlHresultFromLastError();
     }
@@ -1040,10 +1060,10 @@ Exit0:
         }
 
         // 遍历所有挂载点，找到是盘符的
-        for (TCHAR *mountPoint = mountPointsBuffer; *mountPoint; mountPoint += wcslen(mountPoint) + 1)
+        for (TCHAR *mountPoint = mountPointsBuffer; *mountPoint; mountPoint += lstrlen(mountPoint) + 1)
         {
             // Check if it's a disk letter.
-            if (mountPoint[1] == L':' && mountPoint[2] == L'\\')
+            if (mountPoint[1] == _T(':') && mountPoint[2] == _T('\\'))
             {
                 diskLetter = mountPoint[0];
                 return S_OK;
@@ -1101,6 +1121,7 @@ Exit0:
      * @param[out] volumeNames 获取到的卷标列表，示例：\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
      * @param[in] bAppendBackblash 是否在卷标尾部后缀反斜杠
      * @attention 若需要获取当前打开的磁盘卷标，可调用非静态的同名函数GetDiskVolumeNames，本函数为静态函数
+     * @see 拿到路径后，可调用系统API：GetVolumeInformation获取详细信息，参数bAppendBackblash需要设为TRUE
      */
     static void GetDiskVolumeNames(DWORD diskNumber, CAtlArray<CString>& volumeNames, BOOL bAppendBackblash = TRUE)
     {

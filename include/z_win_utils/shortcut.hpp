@@ -19,6 +19,8 @@
 
 #pragma once
 #include "win_utils_header.h"
+#include <shobjidl.h>
+#include <shlguid.h>
 
 namespace zl
 {
