@@ -632,7 +632,7 @@ namespace WinUtils
             HANDLE  hStdOutput = NULL,
             HANDLE  hStdError = NULL)
         {
-            if (!szExePath || !szExePath)
+            if (!szExePath)
             {
                 return -1;
             }
