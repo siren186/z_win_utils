@@ -250,7 +250,8 @@ Exit0:
                 dirStack.pop();
 
                 WIN32_FIND_DATA wfd = { 0 };
-                HANDLE hFind = FindFirstFile(curDir + TEXT("*"), &wfd);
+                // HANDLE hFind = FindFirstFile(curDir + TEXT("*"), &wfd);
+                HANDLE hFind = ::FindFirstFileEx(curDir + TEXT("*"), FindExInfoBasic, &wfd, FindExSearchNameMatch, nullptr, FIND_FIRST_EX_LARGE_FETCH);
                 if (INVALID_HANDLE_VALUE == hFind)
                 {
                     continue;
