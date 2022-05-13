@@ -231,9 +231,10 @@ Exit0:
          * @param[in] lpDir 要遍历的文件夹路径
          * @param[in] callback 回调接口
          * @param[in] param 回调接口的附加参数
+         * @param[in] bSkipDotDot 是否跳过.和..文件夹不处理
          * @return 成功返回TRUE
          */
-        static BOOL WalkDirectory(LPCTSTR lpDir, WalkDirectoryCallback callback, LPVOID param = NULL)
+        static BOOL WalkDirectory(LPCTSTR lpDir, WalkDirectoryCallback callback, LPVOID param = NULL, BOOL bSkipDotDot = TRUE)
         {
             if (!lpDir || !callback)
             {
@@ -250,8 +251,8 @@ Exit0:
                 dirStack.pop();
 
                 WIN32_FIND_DATA wfd = { 0 };
-                // HANDLE hFind = FindFirstFile(curDir + TEXT("*"), &wfd);
-                HANDLE hFind = ::FindFirstFileEx(curDir + TEXT("*"), FindExInfoBasic, &wfd, FindExSearchNameMatch, nullptr, FIND_FIRST_EX_LARGE_FETCH);
+                //HANDLE hFind = FindFirstFile(curDir + TEXT("*"), &wfd);
+                HANDLE hFind = ::FindFirstFileEx(curDir + TEXT("*"), FindExInfoBasic, &wfd, FindExSearchNameMatch, NULL, FIND_FIRST_EX_LARGE_FETCH);
                 if (INVALID_HANDLE_VALUE == hFind)
                 {
                     continue;
@@ -264,11 +265,20 @@ Exit0:
                     {
                         CString childDir = curDir + wfd.cFileName + TEXT("\\");
                         dirStack.push(childDir);
+                        if (!callback(&wfd, curDir, param)) // 文件夹中包包含了"."和".."路径
+                        {
+                            return TRUE;
+                        }
                     }
-
-                    if (!callback(&wfd, curDir, param)) // 文件夹中包包含了"."和".."路径
+                    else // .和..文件夹
                     {
-                        return TRUE;
+                        if (!bSkipDotDot)
+                        {
+                            if (!callback(&wfd, curDir, param)) // 文件夹中包包含了"."和".."路径
+                            {
+                                return TRUE;
+                            }
+                        }
                     }
                 }
                 else
@@ -278,7 +288,6 @@ Exit0:
                         return TRUE;
                     }
                 }
-
                 while (FindNextFile(hFind, &wfd))
                 {
                     if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -288,11 +297,20 @@ Exit0:
                         {
                             CString childDir = curDir + wfd.cFileName + TEXT("\\");
                             dirStack.push(childDir);
+                            if (!callback(&wfd, curDir, param))
+                            {
+                                return TRUE;
+                            }
                         }
-
-                        if (!callback(&wfd, curDir, param))
+                        else
                         {
-                            return TRUE;
+                            if (!bSkipDotDot)
+                            {
+                                if (!callback(&wfd, curDir, param)) // 文件夹中包包含了"."和".."路径
+                                {
+                                    return TRUE;
+                                }
+                            }
                         }
                     }
                     else
