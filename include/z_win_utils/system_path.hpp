@@ -37,7 +37,8 @@ namespace WinUtils
      *      GetCommonAppDataDir             All Users\Application Data
      *      GetCommonTempDir                All Users\Templates
      *      GetAppDataDir                   <user name>\Application Data
-     *      GetTempDir                      <user name>\Templates
+     *      GetTempDir                      <user name>\AppData\Local\Temp
+     *      GetTempDir2                     <user name>\Templates
      *      GetProgramFileDir               Program Files
      */
     /**
@@ -144,12 +145,30 @@ namespace WinUtils
             cstrRet.ReleaseBuffer();
             return ZLPath::PathAddBackslash(cstrRet);
         }
+
+        /**
+         * @brief 获取Temp目录
+         * @return 成功返回Temp目录，失败返回空串
+         * @see GetTempPath
+         */
+        static CString GetTempDir()
+        {
+            CString dir;
+            DWORD len = ::GetTempPath(MAX_PATH, dir.GetBufferSetLength(MAX_PATH + 1));
+            dir.ReleaseBuffer();
+            if (len > MAX_PATH || 0 == len)
+            {
+                return GetTempDir2();
+            }
+            return ZLPath::PathAddBackslash(dir);
+        }
+
         /**
          * @brief 获取Temp目录
          * @return 成功返回Temp目录，失败返回空串
          * @see SHGetFolderPath
          */
-        static CString GetTempDir(HANDLE hToken = NULL)
+        static CString GetTempDir2(HANDLE hToken = NULL)
         {
             CString cstrRet;
             if (hToken != NULL)
@@ -173,6 +192,7 @@ namespace WinUtils
             }
             return cstrRet;
         }
+
         /**
          * @brief 获取ProgramFile目录
          * @return 成功返回ProgramFile目录，失败返回空串
