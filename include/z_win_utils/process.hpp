@@ -607,16 +607,17 @@ namespace WinUtils
 
         /**
          * @brief 创建进程
-         * @param[in] szExePath         可执行文件路径
-         * @param[in] szCmd             命令行参数
-         * @param[in] dwWaitTime        等待进程退出时间
-         * @param[in] bShow             是否显示进程界面
-         * @param[in] hToken            Token句柄，默认为NULL
-         * @param[in] bInheritHandle    是否继承
-         * @param[in] dwCreationFlags   进程创建标示，默认为零
-         * @param[in] hStdInput         重定向标准输入，默认为NULL
-         * @param[in] hStdOutput        重定向标准输出，默认为NULL
-         * @param[in] hStdError         重定向错误输出，默认为NULL
+         * @param[in] szExePath          可执行文件路径
+         * @param[in] szCmd              命令行参数
+         * @param[in] dwWaitTime         等待进程退出时间
+         * @param[in] bShow              是否显示进程界面
+         * @param[in] hToken             Token句柄，默认为NULL
+         * @param[in] bInheritHandle     是否继承
+         * @param[in] dwCreationFlags    进程创建标示，默认为零
+         * @param[in] hStdInput          重定向标准输入，默认为NULL
+         * @param[in] hStdOutput         重定向标准输出，默认为NULL
+         * @param[in] hStdError          重定向错误输出，默认为NULL
+         * @param[in] lpCurrentDirectory 指定进程的工作路径，默认为NULL
          * @return 返回进程的退出代码
          * @see CreateProcess CreateProcessAsUser
          */
@@ -630,7 +631,8 @@ namespace WinUtils
             DWORD   dwCreationFlags = 0,
             HANDLE  hStdInput = NULL,
             HANDLE  hStdOutput = NULL,
-            HANDLE  hStdError = NULL)
+            HANDLE  hStdError = NULL,
+            LPCTSTR lpCurrentDirectory = NULL)
         {
             if (!szExePath)
             {
@@ -682,7 +684,7 @@ namespace WinUtils
                     bInheritHandle,
                     dwCreationFlags,
                     NULL,
-                    NULL,
+                    lpCurrentDirectory,
                     &si,
                     &pi);
             }
@@ -695,7 +697,7 @@ namespace WinUtils
                     bInheritHandle,
                     dwCreationFlags,
                     NULL,
-                    NULL,
+                    lpCurrentDirectory,
                     &si,
                     &pi);
             }
@@ -736,6 +738,7 @@ namespace WinUtils
          * @param[in] bShow              是否显示进程界面
          * @param[in] hToken             Token句柄，默认为NULL
          * @param[in] dwCreationFlags    进程创建标示，默认为零
+         * @param[in] lpCurrentDirectory 指定进程的工作路径，默认为NULL
          * @return 返回进程的退出代码
          * @see CreateProcess CreateProcessAsUser
          */
@@ -748,7 +751,8 @@ namespace WinUtils
             DWORD   dwWaitTime = INFINITE,
             BOOL    bShow = TRUE,
             HANDLE  hToken = NULL,
-            DWORD   dwCreationFlags = 0)
+            DWORD   dwCreationFlags = 0,
+            LPCTSTR lpCurrentDirectory = NULL)
         {
             // 先将读取到的字节数置0
             dwNumberOfByteRead = 0;
@@ -781,7 +785,8 @@ namespace WinUtils
                 dwCreationFlags,
                 NULL,
                 hPipeWrite,
-                hPipeWrite);
+                hPipeWrite,
+                lpCurrentDirectory);
 
             DWORD dwPipeCacheLen = 0;
             if (::PeekNamedPipe(hPipeRead, NULL, 0, NULL, &dwPipeCacheLen, NULL) && dwPipeCacheLen > 0)
