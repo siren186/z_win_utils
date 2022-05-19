@@ -232,7 +232,7 @@ namespace WinUtils
             {
                 filename.Format(format, prefix, i);
                 strUnusedPath = strDir + filename;
-                if (FALSE == ::PathFileExists(strUnusedPath))
+                if (FALSE == ::PathFileExists(strUnusedPath) && ERROR_FILE_NOT_FOUND == ::GetLastError())
                 {
                     return strUnusedPath;
                 }
