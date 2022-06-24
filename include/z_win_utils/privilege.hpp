@@ -70,6 +70,58 @@ namespace WinUtils
             }
             return bRet;
         }
+
+        /**
+         * @brief 判断指定进程是否具有管理员或者管理员以上的权限
+         * @param[in] dwProcessId 进程ID
+         */
+        static BOOL IsProcessRunAsAdmin(DWORD dwProcessId)
+        {
+            HANDLE hProcess = NULL;
+            HANDLE hToken = NULL;
+            BOOL bElevated = FALSE;
+
+            do
+            {
+                // 打开进程, 获取进程句柄
+                hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwProcessId);
+                if (NULL == hProcess)
+                {
+                    break;
+                }
+
+                // 打开进程令牌, 获取进程令牌句柄
+                if (FALSE == ::OpenProcessToken(hProcess, TOKEN_QUERY, &hToken))
+                {
+                    break;
+                }
+
+                // 获取进程令牌特权提升信息
+                DWORD dwRet = 0;
+                TOKEN_ELEVATION tokenEle = { 0 };
+                if (FALSE == ::GetTokenInformation(hToken, TokenElevation, &tokenEle, sizeof(tokenEle), &dwRet))
+                {
+                    break;
+                }
+
+                // 获取进程是否提升的结果
+                bElevated = tokenEle.TokenIsElevated;
+            } while (false);
+
+            if (hToken)
+            {
+                ::CloseHandle(hToken);
+                hToken = NULL;
+            }
+
+            if (hProcess)
+            {
+                ::CloseHandle(hProcess);
+                hProcess = NULL;
+            }
+
+            return bElevated;
+        }
     };
 
 }
