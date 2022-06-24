@@ -19,6 +19,18 @@
  */
 
 
+/**
+ * 重要说明：
+ *   摘至：https://docs.microsoft.com/zh-cn/windows/win32/sysinfo/targeting-your-application-at-windows-8-1
+ *   在Windows 8.1及更高版本中，已弃用 GetVersion 和 GetVersionEx 函数。 
+ *   截至Windows 10，VerifyVersionInfo 函数也已弃用。 
+ *   你仍然可以调用已弃用的函数，但如果应用程序未专门面向Windows 8.1或更高版本，则函数将返回Windows 8版本 (6.2) 。
+ *
+ * 所以在Windows 8.1及更高版本中，需要手动设置下工程的属性，以使本文件中的接口可正常读取系统版本信息
+ *   1. 右键项目属性->清单工具->输入和输出->附加清单文件。
+ *   2. 将system_version.manifest文件的相对路径填写进去，重新编译即可。
+ */
+
 #pragma once
 #include "win_utils_header.h"
 #include "register.hpp"
@@ -127,10 +139,10 @@ namespace WinUtils
         static BOOL GetSystemVersion(DWORD &dwMarjorVersion, DWORD &dwMinorVersion)
         {
             BOOL bReturn = FALSE;
-            bReturn = GetSystemVersionByReg(dwMarjorVersion, dwMinorVersion);
+            bReturn = GetSystemVersionByApi(dwMarjorVersion, dwMinorVersion);
             if (!bReturn)
             {
-                bReturn = GetSystemVersionByApi(dwMarjorVersion, dwMinorVersion);
+                bReturn = GetSystemVersionByReg(dwMarjorVersion, dwMinorVersion);
             }
             return bReturn;
         }
