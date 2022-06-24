@@ -758,7 +758,7 @@ namespace WinUtils
             dwNumberOfByteRead = 0;
 
             // ²ÎÊýÅÐ¶Ï
-            if (!szExePath || !szCmd || !szBuffer || 0 == dwBufferLen)
+            if (!szExePath || !szBuffer || 0 == dwBufferLen)
             {
                 return -1;
             }
