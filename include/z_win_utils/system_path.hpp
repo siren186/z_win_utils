@@ -29,7 +29,7 @@ namespace zl
 {
 namespace WinUtils
 {
-     /**
+    /**
      * @brief 获取系统相关的目录
      * @note 接口列表如下:
      *      GetSystemDir                    windows\system32
@@ -40,7 +40,9 @@ namespace WinUtils
      *      GetTempDir                      <user name>\AppData\Local\Temp
      *      GetTempDir2                     <user name>\Templates
      *      GetProgramFileDir               Program Files
+     *      GetDocumentsDir                 <user name>\Documents\
      */
+
     /**
      * @brief 获取常见的系统相关路径
      */
@@ -68,6 +70,7 @@ namespace WinUtils
             }
             return cstrRet;
         }
+
         /**
          * @brief 获取Windows目录
          * @return 成功返回Windows目录，失败返回空串
@@ -101,6 +104,7 @@ namespace WinUtils
             cstrRet = ZLPath::PathAddBackslash(cstrRet);
             return cstrRet;
         }
+
         /**
          * @brief 获取AppData目录
          * @return 成功返回AppData目录，失败返回空串
@@ -130,6 +134,7 @@ namespace WinUtils
             }
             return cstrRet;
         }
+
         /**
          * @brief 获取CommonTemp目录
          * @return 成功返回CommonTemp目录，失败返回空串
@@ -208,7 +213,34 @@ namespace WinUtils
             cstrRet.ReleaseBuffer();
             return ZLPath::PathAddBackslash(cstrRet);
         }
-    };
 
+        /**
+         * @brief 获取当前用户的“文档”文件夹路径。示例："C:\Users\<user name>\Documents\"
+         */
+        static CString GetDocumentsDir(HANDLE hToken = NULL)
+        {
+            CString cstrRet;
+            if (hToken != NULL)
+            {
+                ::SHGetFolderPath(NULL,
+                    CSIDL_PERSONAL,
+                    hToken,
+                    SHGFP_TYPE_CURRENT,
+                    cstrRet.GetBuffer(MAX_PATH + 1));
+                cstrRet.ReleaseBuffer();
+                cstrRet = ZLPath::PathAddBackslash(cstrRet);
+            }
+            else
+            {
+                ::SHGetSpecialFolderPath(NULL,
+                    cstrRet.GetBuffer(MAX_PATH + 1),
+                    CSIDL_PERSONAL,
+                    FALSE);
+                cstrRet.ReleaseBuffer();
+                cstrRet = ZLPath::PathAddBackslash(cstrRet);
+            }
+            return cstrRet;
+        }
+    };
 }
 }
