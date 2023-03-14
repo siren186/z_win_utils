@@ -22,6 +22,7 @@
 #pragma once
 #include "win_utils_header.h"
 #include <vector>
+#include <map>
 
 namespace zl
 {

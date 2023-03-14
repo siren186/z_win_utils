@@ -618,6 +618,7 @@ namespace WinUtils
          * @param[in] hStdOutput         重定向标准输出，默认为NULL
          * @param[in] hStdError          重定向错误输出，默认为NULL
          * @param[in] lpCurrentDirectory 指定进程的工作路径，默认为NULL
+         * @param[in] bKillIfTimeout     是否在超时时间到之后结束进程
          * @return 返回进程的退出代码
          * @see CreateProcess CreateProcessAsUser
          */
@@ -632,7 +633,8 @@ namespace WinUtils
             HANDLE  hStdInput = NULL,
             HANDLE  hStdOutput = NULL,
             HANDLE  hStdError = NULL,
-            LPCTSTR lpCurrentDirectory = NULL)
+            LPCTSTR lpCurrentDirectory = NULL,
+            BOOL    bKillIfTimeout = FALSE)
         {
             if (!szExePath)
             {
@@ -709,7 +711,14 @@ namespace WinUtils
 
             if (0 != dwWaitTime)
             {
-                ::WaitForSingleObject(pi.hProcess, dwWaitTime);
+                DWORD dwWait = ::WaitForSingleObject(pi.hProcess, dwWaitTime);
+                if (bKillIfTimeout && (dwWait != WAIT_OBJECT_0))
+                {
+                    ::TerminateProcess(pi.hProcess, 0);
+                    ::CloseHandle(pi.hProcess);
+                    ::CloseHandle(pi.hThread);
+                    return -2;
+                }
             }
             ::GetExitCodeProcess(pi.hProcess, &dwExitCode);
 
@@ -752,7 +761,8 @@ namespace WinUtils
             BOOL    bShow = TRUE,
             HANDLE  hToken = NULL,
             DWORD   dwCreationFlags = 0,
-            LPCTSTR lpCurrentDirectory = NULL)
+            LPCTSTR lpCurrentDirectory = NULL,
+            BOOL    bKillIfTimeout = FALSE)
         {
             // 先将读取到的字节数置0
             dwNumberOfByteRead = 0;
@@ -786,7 +796,8 @@ namespace WinUtils
                 NULL,
                 hPipeWrite,
                 hPipeWrite,
-                lpCurrentDirectory);
+                lpCurrentDirectory,
+                bKillIfTimeout);
 
             DWORD dwPipeCacheLen = 0;
             if (::PeekNamedPipe(hPipeRead, NULL, 0, NULL, &dwPipeCacheLen, NULL) && dwPipeCacheLen > 0)

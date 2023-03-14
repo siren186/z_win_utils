@@ -966,6 +966,27 @@ Exit0:
     }
 
     /**
+     * @brief 将磁盘路径，转换为磁盘号
+     * @param[in] lpFilePath 磁盘路径。示例："\\\\.\\PhysicalDrive0"
+     * @return 失败返回-1，成功返回对应的磁盘号
+     */
+    static DWORD PhysicalDrivePathToDiskNumber(LPCTSTR lpFilePath)
+    {
+        const CString prefix = L"\\\\.\\PhysicalDrive";
+        CString filePath = lpFilePath;
+        if (filePath.GetLength() > prefix.GetLength())
+        {
+            if (0 == prefix.CompareNoCase(filePath.Left(prefix.GetLength())))
+            {
+                CString szNum = filePath.Mid(prefix.GetLength());
+                return (DWORD)StrToInt(szNum);
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * @brief 根据盘符获取其对应的磁盘索引号、分区号、设备类型
      * @param[in] letter 指定要查询的盘符
      * @param[in] diskNumber 磁盘索引号

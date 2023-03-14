@@ -196,7 +196,7 @@ Exit0:
                 strSubFile.Format(_T("%s%s"), strSrcDir, fData.cFileName);
                 strSubDstFile.Format(_T("%s%s"), strDstDir, fData.cFileName);
 
-                if (!::CopyFile(strSubFile, strSubDstFile, !bCoverFile))
+                if (::CopyFile(strSubFile, strSubDstFile, !bCoverFile))
                 {
                     nReturn++;
                 }
@@ -251,8 +251,16 @@ Exit0:
             theStack.pop();
 
             WIN32_FIND_DATA wfd = { 0 };
+
+#if _MSC_VER>=1600
+            FINDEX_INFO_LEVELS fInfoLevelId = FindExInfoBasic;
+            DWORD dwAdditionalFlags = FIND_FIRST_EX_LARGE_FETCH;
+#else
+            FINDEX_INFO_LEVELS fInfoLevelId = FindExInfoStandard;
+            DWORD dwAdditionalFlags = 0;
+#endif
             // HANDLE hFind = ::FindFirstFile(curDir + TEXT("*"), &wfd);
-            HANDLE hFind = ::FindFirstFileEx(curDir + TEXT("*"), FindExInfoBasic, &wfd, FindExSearchNameMatch, NULL, FIND_FIRST_EX_LARGE_FETCH);
+            HANDLE hFind = ::FindFirstFileEx(curDir + TEXT("*"), fInfoLevelId, &wfd, FindExSearchNameMatch, NULL, dwAdditionalFlags);
             if (INVALID_HANDLE_VALUE == hFind)
             {
                 continue;

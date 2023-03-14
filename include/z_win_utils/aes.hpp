@@ -113,6 +113,7 @@ public:
         const size_t         dest_size);
 
 private:
+    static void _aesMyMemcpy(unsigned char* dest, const size_t dest_size, const unsigned char* src, const size_t src_size);
     // Padding
     static size_t _Padding(const PaddingMode padding_mode, const unsigned char* src, const size_t src_size, unsigned char* dest, const size_t dest_size);
     static size_t _PaddingPKCS5(const unsigned char* src, const size_t src_size, unsigned char* dest, const size_t dest_size);
@@ -207,6 +208,24 @@ Exit0:
     return ret;
 }
 
+
+inline void ZLAes::_aesMyMemcpy(unsigned char* dest, const size_t dest_size, const unsigned char* src, const size_t src_size)
+{
+    if (!src || !dest)
+    {
+        return;
+    }
+
+    if (src_size > dest_size)
+    {
+        memcpy_s(dest, dest_size, src, dest_size);
+    }
+    else
+    {
+        memcpy_s(dest, dest_size, src, src_size);
+    }
+}
+
 inline size_t ZLAes::_Padding(
     const PaddingMode    padding_mode,
     const unsigned char* src,
@@ -233,7 +252,7 @@ inline size_t ZLAes::_PaddingPKCS5(
     size_t need_size =  ((src_size + 16) / 16) * 16;
     if (need_size <= dest_size)
     {
-        memcpy_s(dest, dest_size, src, src_size);
+        _aesMyMemcpy(dest, dest_size, src, src_size);
         size_t value = need_size - src_size;
         for (size_t i = 0; i < value; i++)
         {
@@ -273,8 +292,8 @@ inline size_t ZLAes::_DePaddingPKCS5(
     size_t padding_value = *(src + src_size - 1);
     size_t valid_size = src_size - padding_value;
 
-    memcpy_s(dest, dest_size, src, valid_size);
-    return valid_size;
+    _aesMyMemcpy(dest, dest_size, src, valid_size);
+    return valid_size > dest_size ? dest_size : valid_size;
 }
 
 inline bool ZLAes::_Encrypt(

@@ -53,9 +53,10 @@ namespace WinUtils
         /**
          * @brief 获取文件名
          * @param[in] szFullPath 文件路径
+         * @param[in] bRemoveExtension 是否移除后缀名（示例："hello.txt" -> "hello"）
          * @return 成功返回文件名, 失败返回路径
          */
-        static CString PathToFileName(LPCTSTR szPath)
+        static CString PathToFileName(LPCTSTR szPath, BOOL bRemoveExtension = FALSE)
         {
             CString strPath = ZLPath::PathRemoveBackslash(szPath);
             int pos = strPath.ReverseFind(_T('\\'));
@@ -64,11 +65,16 @@ namespace WinUtils
                 pos = strPath.ReverseFind(_T('/'));
             }
 
-            if (-1 == pos)
+            if (-1 != pos)
             {
-                return strPath;
+                strPath = strPath.Mid(pos + 1);
             }
-            return strPath.Mid(pos + 1);
+
+            if (bRemoveExtension)
+            {
+                return PathRemoveExtension(strPath);
+            }
+            return strPath;
         }
 
         /**
