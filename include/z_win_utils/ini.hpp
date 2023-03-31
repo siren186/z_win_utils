@@ -24,6 +24,7 @@
 
 #include "win_utils_header.h"
 #include <vector>
+#include <algorithm>
 
 #define DEF_PROFILE_NUM_LEN         64  // numeric string length, could be quite long for binary format
 #define DEF_PROFILE_THRESHOLD       512 // temporary string length
@@ -129,7 +130,7 @@ namespace WinUtils
             if (lpBuffer != NULL)
             {
                 _tcsncpy(lpBuffer, psTemp, dwBufSize);
-                dwLen = min(dwLen, dwBufSize);
+                dwLen = std::min(dwLen, dwBufSize);
             }
 
             delete [] psTemp;
@@ -245,7 +246,7 @@ namespace WinUtils
             if (nWriteCount < 0)
                 nWriteCount = (int)pArray->size();
             else
-                nWriteCount = min(nWriteCount, (int)pArray->size());
+                nWriteCount = std::min(nWriteCount, (int)pArray->size());
 
             const CString sDelimiter = (lpDelimiter == NULL || *lpDelimiter == _T('\0')) ? _T(",") : lpDelimiter;
             CString sLine;
@@ -451,7 +452,7 @@ namespace WinUtils
 
             if (lpb != NULL)
             {
-                dwProcLen = min(dwLen - dwOffset, dwBufSize);
+                dwProcLen = std::min(dwLen - dwOffset, dwBufSize);
 
                 LPCTSTR p = &psTemp[dwOffset * 2];
 
@@ -957,7 +958,7 @@ namespace WinUtils
                     TrimString(pszSeg);
 
                 const DWORD dwSegLen = (DWORD)_tcslen(pszSeg);
-                const DWORD dwCopyLen = min(dwSegLen, dwBufSize - dwCopied);
+                const DWORD dwCopyLen = std::min(dwSegLen, dwBufSize - dwCopied);
 
                 // Need to avoid buffer overflow
                 if (dwCopyLen > 0)
@@ -980,7 +981,7 @@ namespace WinUtils
                 TrimString(pszSeg);
 
             const DWORD dwSegLen = (DWORD)_tcslen(pszSeg);
-            const DWORD dwCopyLen = min(dwSegLen, dwBufSize - dwCopied);
+            const DWORD dwCopyLen = std::min(dwSegLen, dwBufSize - dwCopied);
 
             if (dwCopyLen > 0)
             {
@@ -1106,7 +1107,7 @@ namespace WinUtils
 
             if (pPairData->lpTarget != NULL)
             {
-                dwCopyLen = (pPairData->dwRemain > 1) ? min(dwNameLen, pPairData->dwRemain - 1) : 0;
+                dwCopyLen = (pPairData->dwRemain > 1) ? std::min(dwNameLen, pPairData->dwRemain - 1) : 0;
                 _tcsncpy(pPairData->lpTarget, psz, dwCopyLen);
                 pPairData->lpTarget[dwCopyLen] = _T('\0');
                 pPairData->lpTarget = &(pPairData->lpTarget[dwCopyLen + 1]); 

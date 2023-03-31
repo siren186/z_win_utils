@@ -617,7 +617,7 @@ Exit0:
     {
         HRESULT hr = E_FAIL;
         DWORD junk = 0;
-        const int LEN = sizeof(DRIVE_LAYOUT_INFORMATION_EX) + sizeof(PARTITION_INFORMATION_EX) * (layout.PartitionEntry.GetCount() - 1);
+        const int LEN = (int)(sizeof(DRIVE_LAYOUT_INFORMATION_EX) + sizeof(PARTITION_INFORMATION_EX) * (layout.PartitionEntry.GetCount() - 1));
         DRIVE_LAYOUT_INFORMATION_EX* pLayoutEx = (DRIVE_LAYOUT_INFORMATION_EX*)malloc(LEN);
 
         if (!pLayoutEx)
@@ -628,7 +628,7 @@ Exit0:
 
         ZeroMemory(pLayoutEx, LEN);
         pLayoutEx->PartitionStyle = layout.PartitionStyle;
-        pLayoutEx->PartitionCount = layout.PartitionEntry.GetCount();
+        pLayoutEx->PartitionCount = (DWORD)layout.PartitionEntry.GetCount();
 
         if (PARTITION_STYLE_MBR == layout.PartitionStyle)
         {
@@ -1324,7 +1324,7 @@ private:
         size_t len = _tcscnlen(lpVolumeName, MAX_PATH);
         if (lpVolumeName[len - 1] == _T('\\') || lpVolumeName[len - 1] == _T('/'))
         {
-            strVolumeName.Append(lpVolumeName, len - 1);
+            strVolumeName.Append(lpVolumeName, (int)(len - 1));
         }
         else
         {
