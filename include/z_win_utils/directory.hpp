@@ -344,19 +344,17 @@ private:
     // 校验字符串是不是"."或".."
     static inline bool isDotOrDotDot(LPCTSTR szFileName)
     {
-        if (szFileName[2] != TEXT('\0'))
+        if (szFileName[0] == TEXT('.'))
         {
-            return false;
-        }
+            if (szFileName[1] == TEXT('\0'))
+            {
+                return true;
+            }
 
-        if (szFileName[0] != TEXT('.'))
-        {
-            return false;
-        }
-
-        if (szFileName[1] == TEXT('.') || szFileName[1] == TEXT('\0'))
-        {
-            return true;
+            if (szFileName[1] == TEXT('.') && szFileName[2] == TEXT('\0'))
+            {
+                return true;
+            }
         }
 
         return false;
