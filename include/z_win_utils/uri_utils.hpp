@@ -52,8 +52,8 @@ public:
     static std::string UrlDecode(const std::string& str);
 
 private:
-    static unsigned char ZLUriUtils::_ToHex( unsigned char x );
-    static unsigned char ZLUriUtils::_FromHex( unsigned char x );
+    static unsigned char _ToHex( unsigned char x );
+    static unsigned char _FromHex( unsigned char x );
 
     static const std::string s_sMustBeEncode;
 };
