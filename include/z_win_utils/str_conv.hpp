@@ -100,7 +100,7 @@ inline CStringW ZLStrConv::a2w(LPCSTR lpBuf, UINT uCodePage, int nBufLen)
         BOOL bSuc = (0 < ::MultiByteToWideChar(uCodePage, 0, lpBuf, nBufLen, pResult, nDstLen));
         if (bSuc)
         {
-            sRetW.Append(pResult, nDstLen - 1);
+            sRetW.Append(pResult, nDstLen);
         }
         delete[] pResult;
     }
@@ -117,7 +117,7 @@ inline CStringA ZLStrConv::w2a( LPCWSTR lpBuf, UINT uCodePage, int nBufLen )
         BOOL bSuc = (0 < ::WideCharToMultiByte( uCodePage, 0, lpBuf, nBufLen, pResult, nDstLen, NULL, NULL ));
         if (bSuc)
         {
-            sRetA.Append(pResult, nDstLen - 1);
+            sRetA.Append(pResult, nDstLen);
         }
         delete[] pResult;
     }
