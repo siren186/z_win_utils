@@ -406,7 +406,7 @@ namespace WinUtils
             ZL_PROCESS_BASIC_INFORMATION pbi = {0};
             ZL_PEB Peb = {0};
             ZL_PROCESS_PARAMETERS ProcParam = {0};
-            DWORD dwDummy = 0;
+            SIZE_T dwDummy = 0;
             DWORD dwSize = 0;
             LPVOID lpAddress = NULL;
             PROCNTQSIP NtQueryInformationProcess = NULL;

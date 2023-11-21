@@ -230,7 +230,7 @@ inline void ZLMd5BaseImpl::MD5Final(unsigned char digest[16])
 
 inline void ZLMd5BaseImpl::MD5Transform(unsigned int buf[4], unsigned int const in[16]) const
 {
-	register unsigned int a, b, c, d;
+	unsigned int a, b, c, d;
 
 	a = buf[0];
 	b = buf[1];

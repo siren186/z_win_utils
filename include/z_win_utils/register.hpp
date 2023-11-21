@@ -100,7 +100,7 @@ namespace WinUtils
         void Close();
 
     private:
-        void ZLRegister::_ParseDNTString(LPCTSTR lpString, std::vector<CString>& vecResult) const;
+        void _ParseDNTString(LPCTSTR lpString, std::vector<CString>& vecResult) const;
     };
 
     inline ZLRegister::ZLRegister() : m_hKey(NULL) {}
