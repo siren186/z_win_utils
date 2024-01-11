@@ -157,17 +157,19 @@ inline size_t ZLAes::Encrypt(
     }
 
     // Step2: Padding
-    size_t real_size = _Padding(padding_mode, src, src_size, dest, dest_size);
-    if (real_size < src_size ||
-        real_size % 16 != 0)
+    ret = _Padding(padding_mode, src, src_size, dest, dest_size);
+    if (ret < src_size ||
+        ret % 16 != 0)
     {
+        ret = 0;
         goto Exit0;
     }
 
     // Step3: Encrypt
-    if (_Encrypt(block_mode, key, key_bits, dest, real_size, dest))
+    if (!_Encrypt(block_mode, key, key_bits, dest, ret, dest))
     {
-        ret = real_size;
+        ret = 0;
+        goto Exit0;
     }
 
 Exit0:
