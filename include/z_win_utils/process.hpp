@@ -359,10 +359,10 @@ namespace WinUtils
          * @param[in] dwPid 进程ID
          * @return 成功返回TRUE，失败返回FALSE
          */
-        static int GetParentProcessID(DWORD dwPid)
+        static DWORD GetParentProcessID(DWORD dwPid)
         {
             LONG lStatus = 0;
-            int nParentPID = -1;
+            DWORD nParentPID = -1;
             HANDLE hProcess = 0;
             ZL_PROCESS_BASIC_INFORMATION pbi = {0};
 
