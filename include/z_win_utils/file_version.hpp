@@ -15,8 +15,8 @@
 
 /**
  * @file
- * @brief ÎÄ¼ş°æ±¾ĞÅÏ¢
- * @todo Õâ¸öÎÄ¼ş×¢ÊÍ,ÓĞ´ıĞŞ¸Ä
+ * @brief æ–‡ä»¶ç‰ˆæœ¬ä¿¡æ¯
+ * @todo è¿™ä¸ªæ–‡ä»¶æ³¨é‡Š,æœ‰å¾…ä¿®æ”¹
  */
 
 
@@ -30,7 +30,7 @@ namespace zl
 namespace WinUtils
 {
     /**
-     * @brief Ìá¹©ÎÄ¼ş°æ±¾ĞÅÏ¢Ïà¹Ø²Ù×÷
+     * @brief æä¾›æ–‡ä»¶ç‰ˆæœ¬ä¿¡æ¯ç›¸å…³æ“ä½œ
      */
     class ZLFileVersion
     {
@@ -44,9 +44,9 @@ namespace WinUtils
         {}
 
         /**
-         * @brief ´´½¨³õÊ¼»¯Ö¸¶¨Ä£¿éÎÄ¼şĞÅÏ¢
-         * @param[in] hModule Ä£¿é¾ä±ú£¬Ä¬ÈÏÎªNULL
-         * @return ³É¹¦·µ»ØTRUE£¬Ê§°ÜFALSE
+         * @brief åˆ›å»ºåˆå§‹åŒ–æŒ‡å®šæ¨¡å—æ–‡ä»¶ä¿¡æ¯
+         * @param[in] hModule æ¨¡å—å¥æŸ„ï¼Œé»˜è®¤ä¸ºNULL
+         * @return æˆåŠŸè¿”å›TRUEï¼Œå¤±è´¥FALSE
          */
         BOOL Create(HMODULE hModule = NULL)
         {
@@ -58,9 +58,9 @@ namespace WinUtils
         }
 
         /**
-         * @brief ´´½¨³õÊ¼»¯Ö¸¶¨ÎÄ¼şĞÅÏ¢
-         * @param[in] lpFileName  ÎÄ¼şÂ·¾¶
-         * @return ³É¹¦·µ»ØTRUE£¬Ê§°ÜFALSE
+         * @brief åˆ›å»ºåˆå§‹åŒ–æŒ‡å®šæ–‡ä»¶ä¿¡æ¯
+         * @param[in] lpFileName  æ–‡ä»¶è·¯å¾„
+         * @return æˆåŠŸè¿”å›TRUEï¼Œå¤±è´¥FALSE
          */
         BOOL Create(LPCTSTR lpFileName)
         {
@@ -117,7 +117,7 @@ namespace WinUtils
 
                 strTemp = sSubBlock + L"CompanyName";
                 bRetCode = ::VerQueryValue(lpData, strTemp.GetBuffer(), &lpInfo, &unInfoLen);
-                if (bRetCode == FALSE)//¼ì²éÊÇ·ñ´æÔÚ
+                if (bRetCode == FALSE)//æ£€æŸ¥æ˜¯å¦å­˜åœ¨
                     dwLangCode = 0x04b00409;//sogou
                 strTemp.ReleaseBuffer();
 
@@ -206,10 +206,10 @@ namespace WinUtils
         }
 
         /**
-         * @brief ¶ÁÈ¡ÎÄ¼ş°æ±¾
-         * @param[in] nIndex ÏÂ±ê,´Ó0¿ªÊ¼,·Ö±ğ¶ÔÓ¦°æ±¾ºÅÖĞÒÔµãºÅ¼ä¸ôµÄ¸÷¸ö¶Î.
-         * @return °æ±¾ºÅ
-         * @note ÎÄ¼ş°æ±¾ºÅÓÉ4¶Î×é³É,Èç"2014.7.17.520", ²ÎÊınIndexÌî0Ê±,È¡µÃ2014, Ìî3Ê±,È¡µÃ520
+         * @brief è¯»å–æ–‡ä»¶ç‰ˆæœ¬
+         * @param[in] nIndex ä¸‹æ ‡,ä»0å¼€å§‹,åˆ†åˆ«å¯¹åº”ç‰ˆæœ¬å·ä¸­ä»¥ç‚¹å·é—´éš”çš„å„ä¸ªæ®µ.
+         * @return ç‰ˆæœ¬å·
+         * @note æ–‡ä»¶ç‰ˆæœ¬å·ç”±4æ®µç»„æˆ,å¦‚"2014.7.17.520", å‚æ•°nIndexå¡«0æ—¶,å–å¾—520, å¡«3æ—¶,å–å¾—2014
          */
         WORD GetFileVersion(int nIndex) const
         {
@@ -226,10 +226,10 @@ namespace WinUtils
         }
 
         /**
-         * @brief ¶ÁÈ¡²úÆ·°æ±¾ºÅ
-         * @param[in] nIndex ÏÂ±ê,´Ó0¿ªÊ¼, ·Ö±ğ¶ÔÓ¦°æ±¾ºÅÖĞÒÔµãºÅ¼ä¸ôµÄ¸÷¸ö¶Î.
-         * @return °æ±¾ºÅ
-         * @note ÎÄ¼ş°æ±¾ºÅÓÉ4¶Î×é³É,Èç"9.1.123455.888", ²ÎÊınIndexÌî0Ê±,È¡µÃ9, Ìî3Ê±,È¡µÃ888
+         * @brief è¯»å–äº§å“ç‰ˆæœ¬å·
+         * @param[in] nIndex ä¸‹æ ‡,ä»0å¼€å§‹, åˆ†åˆ«å¯¹åº”ç‰ˆæœ¬å·ä¸­ä»¥ç‚¹å·é—´éš”çš„å„ä¸ªæ®µ.
+         * @return ç‰ˆæœ¬å·
+         * @note æ–‡ä»¶ç‰ˆæœ¬å·ç”±4æ®µç»„æˆ,å¦‚"9.1.123455.888", å‚æ•°nIndexå¡«0æ—¶,å–å¾—9, å¡«3æ—¶,å–å¾—888
          */
         WORD GetProductVersion(int nIndex) const
         {
@@ -246,7 +246,7 @@ namespace WinUtils
         }
 
         /**
-         * @brief ÎÄ¼ş±êÖ¾Î»µÄÑÚÂë,²Î¿¼MSDNµÄVS_FIXEDFILEINFO½á¹¹Ìå
+         * @brief æ–‡ä»¶æ ‡å¿—ä½çš„æ©ç ,å‚è€ƒMSDNçš„VS_FIXEDFILEINFOç»“æ„ä½“
          */
         DWORD GetFileFlagsMask() const
         {
@@ -254,7 +254,7 @@ namespace WinUtils
         }
 
         /**
-         * @brief ÎÄ¼ş±êÖ¾Î»,²Î¿¼MSDNµÄVS_FIXEDFILEINFO½á¹¹Ìå
+         * @brief æ–‡ä»¶æ ‡å¿—ä½,å‚è€ƒMSDNçš„VS_FIXEDFILEINFOç»“æ„ä½“
          */
         DWORD GetFileFlags() const
         {
@@ -262,8 +262,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡ÎÄ¼şÏµÍ³
-        * @param[in]   nIndex  Ë÷Òı
+        * @brief è·å–æ–‡ä»¶ç³»ç»Ÿ
+        * @param[in]   nIndex  ç´¢å¼•
         * @return FileOS
         */
         DWORD GetFileOs() const
@@ -272,7 +272,7 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡ÎÄ¼şÍ¨ÓÃÀàĞÍ
+        * @brief è·å–æ–‡ä»¶é€šç”¨ç±»å‹
         * @return FileType
         */
         DWORD GetFileType() const
@@ -281,7 +281,7 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡ÎÄ¼ş¹¦ÄÜ
+         * @brief è·å–æ–‡ä»¶åŠŸèƒ½
          * @return FileSubtype
          */
         DWORD GetFileSubtype() const
@@ -290,7 +290,7 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡ÎÄ¼şÈÕÆÚ
+        * @brief è·å–æ–‡ä»¶æ—¥æœŸ
         * @return FILETIME data structure 
         */
         FILETIME GetFileDate() const
@@ -304,8 +304,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡CompanyName
-        * @return  ×Ö·û´®£¬´ú±íCompanyName
+        * @brief è·å–CompanyName
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨CompanyName
         */
         CString GetCompanyName() const
         {
@@ -313,8 +313,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡ÎÄ¼şÃèÊö
-        * @return  ×Ö·û´®£¬±íÊ¾ÎÄ¼şÃèÊö
+        * @brief è·å–æ–‡ä»¶æè¿°
+        * @return  å­—ç¬¦ä¸²ï¼Œè¡¨ç¤ºæ–‡ä»¶æè¿°
         */
         CString GetFileDescription() const
         {
@@ -322,8 +322,8 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡ÎÄ¼ş°æ±¾
-         * @return  ×Ö·û´®£¬´ú±íFileVersion
+         * @brief è·å–æ–‡ä»¶ç‰ˆæœ¬
+         * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨FileVersion
          */
         CString GetFileVersion() const
         {
@@ -331,8 +331,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡InternalName
-        * @return  ×Ö·û´®£¬´ú±íInternalName
+        * @brief è·å–InternalName
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨InternalName
         */
         CString GetInternalName() const
         {
@@ -340,8 +340,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡LegalCopyright
-        * @return  ×Ö·û´®£¬´ú±íLegalCopyright
+        * @brief è·å–LegalCopyright
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨LegalCopyright
         */
         CString GetLegalCopyright() const
         {
@@ -349,8 +349,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡OriginalFileName
-        * @return  ×Ö·û´®£¬´ú±íOriginalFileName
+        * @brief è·å–OriginalFileName
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨OriginalFileName
         */
         CString GetOriginalFileName() const
         {
@@ -358,8 +358,8 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡ProductName
-         * @return  ×Ö·û´®£¬´ú±íProductName
+         * @brief è·å–ProductName
+         * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨ProductName
          */
         CString GetProductName() const
         {
@@ -367,8 +367,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡ProductVersion
-        * @return  ×Ö·û´®£¬´ú±íProductVersion
+        * @brief è·å–ProductVersion
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨ProductVersion
         */
         CString GetProductVersion() const
         {
@@ -376,8 +376,8 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡Comments
-         * @return  ×Ö·û´®£¬´ú±íComments
+         * @brief è·å–Comments
+         * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨Comments
          */
         CString GetComments() const
         {
@@ -385,8 +385,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡LegalTrademarks
-        * @return  ×Ö·û´®£¬´ú±íLegalTrademarks
+        * @brief è·å–LegalTrademarks
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨LegalTrademarks
         */
         CString GetLegalTrademarks() const
         {
@@ -394,8 +394,8 @@ namespace WinUtils
         }
 
         /**
-        * @brief »ñÈ¡PrivateBuild
-        * @return  ×Ö·û´®£¬´ú±íPrivateBuild
+        * @brief è·å–PrivateBuild
+        * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨PrivateBuild
         */
         CString GetPrivateBuild() const
         {
@@ -403,8 +403,8 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡SpecialBuild
-         * @return  ×Ö·û´®£¬´ú±íSpecialBuild
+         * @brief è·å–SpecialBuild
+         * @return  å­—ç¬¦ä¸²ï¼Œä»£è¡¨SpecialBuild
          */
         CString GetSpecialBuild() const
         {
@@ -431,13 +431,13 @@ namespace WinUtils
         }
 
         /**
-         * @brief »ñÈ¡µ±Ç°ÓÃ»§µÄ±¾µØÓïÑÔ±êÊ¾
-         * @param[in]   lpData Buffer£¬°üº¬Ö¸¶¨ÎÄ¼şµÄ°æ±¾ĞÅÏ¢
-         * @param[in]   unBlockSize VS_FIXEDFILEINFO½á¹¹ÌåµÄ´óĞ¡
-         * @param[in]  wLangId ÓïÑÔ±êÊ¾
-         * @param[out]  dwId ÓïÑÔ±êÊ¾
-         * @param[in]  bPrimaryEnough ÊÇ·ñ½øĞĞµÍ×Ö½Ú²Ù×÷
-         * @return Èç¹û³É¹¦£¬·µ»ØTRUE£¬Èç¹ûÊ§°Ü·µ»ØFALSE
+         * @brief è·å–å½“å‰ç”¨æˆ·çš„æœ¬åœ°è¯­è¨€æ ‡ç¤º
+         * @param[in]   lpData Bufferï¼ŒåŒ…å«æŒ‡å®šæ–‡ä»¶çš„ç‰ˆæœ¬ä¿¡æ¯
+         * @param[in]   unBlockSize VS_FIXEDFILEINFOç»“æ„ä½“çš„å¤§å°
+         * @param[in]  wLangId è¯­è¨€æ ‡ç¤º
+         * @param[out]  dwId è¯­è¨€æ ‡ç¤º
+         * @param[in]  bPrimaryEnough æ˜¯å¦è¿›è¡Œä½å­—èŠ‚æ“ä½œ
+         * @return å¦‚æœæˆåŠŸï¼Œè¿”å›TRUEï¼Œå¦‚æœå¤±è´¥è¿”å›FALSE
          */
         BOOL GetTranslationId(
             LPVOID lpData, 
