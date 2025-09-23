@@ -15,7 +15,7 @@
 
 /**
  * @file
- * @brief ç£ç›˜é©±åŠ¨å™¨ç›¸å…³
+ * @brief ´ÅÅÌÇı¶¯Æ÷Ïà¹Ø
  */
 
 
@@ -34,7 +34,7 @@ namespace WinUtils
 {
 
 /**
- * @brief ç‰©ç†ç£ç›˜æ“ä½œæ¥å£ï¼Œæ“ä½œçš„è·¯å¾„æ ¼å¼ï¼š"\\\\.\\PhysicalDrive%u"
+ * @brief ÎïÀí´ÅÅÌ²Ù×÷½Ó¿Ú£¬²Ù×÷µÄÂ·¾¶¸ñÊ½£º"\\\\.\\PhysicalDrive%u"
  */
 class ZLPhysicalDrive
 {
@@ -62,11 +62,11 @@ public:
     }
 
     /**
-     * @brief æ‰“å¼€ç£ç›˜
-     * @param[in] dwDiskNumber æŒ‡å®šè¦æ‰“å¼€çš„ç£ç›˜ç´¢å¼•å·
-     * @param[in] dwDesiredAccess è¯»å†™æƒé™è®¾ç½®
-     * @param[in] dwShareMode å…±äº«è¯»å†™è®¾ç½®
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief ´ò¿ª´ÅÅÌ
+     * @param[in] dwDiskNumber Ö¸¶¨Òª´ò¿ªµÄ´ÅÅÌË÷ÒıºÅ
+     * @param[in] dwDesiredAccess ¶ÁĞ´È¨ÏŞÉèÖÃ
+     * @param[in] dwShareMode ¹²Ïí¶ÁĞ´ÉèÖÃ
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT Open(DWORD dwDiskNumber, DWORD dwDesiredAccess = GENERIC_READ, DWORD dwShareMode = FILE_SHARE_READ | FILE_SHARE_WRITE)
     {
@@ -79,17 +79,17 @@ public:
     }
 
     /**
-     * @brief æ‰“å¼€ç£ç›˜
-     * @param[in] dwDiskNumber æŒ‡å®šè¦æ‰“å¼€çš„ç£ç›˜ç´¢å¼•å·
-     * @param[in] dwDesiredAccess è¯»å†™æƒé™è®¾ç½®
-     * @param[in] dwShareMode å…±äº«è¯»å†™è®¾ç½®
-     * @param[in] pnDiskSize ç£ç›˜å¤§å°ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] bLockVolume æ˜¯å¦é”å®šç£ç›˜çš„æ‰€æœ‰å·æ ‡
-     * @param[in] bDismountVolume æ˜¯å¦dismountç£ç›˜çš„æ‰€æœ‰å·æ ‡ï¼Œå¦‚æœä¸ºTRUEï¼Œåˆ™å‚æ•°bLockVolumeæ— è®ºæ˜¯å¦ä¸ºTRUEéƒ½ä¼šå¼ºåˆ¶ä¸ºTRUE
-     * @param[in] pDiskGeometry ç£ç›˜Geometryä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] pDrvLayout ç£ç›˜Layoutä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] nSeekOffset è¯»å†™æŒ‡é’ˆè·³è½¬åˆ°æŒ‡å®šçš„åç§»ä½ç½®ï¼Œé»˜è®¤ä¸º0
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief ´ò¿ª´ÅÅÌ
+     * @param[in] dwDiskNumber Ö¸¶¨Òª´ò¿ªµÄ´ÅÅÌË÷ÒıºÅ
+     * @param[in] dwDesiredAccess ¶ÁĞ´È¨ÏŞÉèÖÃ
+     * @param[in] dwShareMode ¹²Ïí¶ÁĞ´ÉèÖÃ
+     * @param[in] pnDiskSize ´ÅÅÌ´óĞ¡£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] bLockVolume ÊÇ·ñËø¶¨´ÅÅÌµÄËùÓĞ¾í±ê
+     * @param[in] bDismountVolume ÊÇ·ñdismount´ÅÅÌµÄËùÓĞ¾í±ê£¬Èç¹ûÎªTRUE£¬Ôò²ÎÊıbLockVolumeÎŞÂÛÊÇ·ñÎªTRUE¶¼»áÇ¿ÖÆÎªTRUE
+     * @param[in] pDiskGeometry ´ÅÅÌGeometryĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] pDrvLayout ´ÅÅÌLayoutĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] nSeekOffset ¶ÁĞ´Ö¸ÕëÌø×ªµ½Ö¸¶¨µÄÆ«ÒÆÎ»ÖÃ£¬Ä¬ÈÏÎª0
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT OpenEx(
         DWORD dwDiskNumber,
@@ -183,15 +183,15 @@ Exit0:
     }
 
     /**
-     * @brief æ‰“å¼€ç£ç›˜ï¼ˆåªè¯»ï¼‰
-     * @param[in] dwDiskNumber æŒ‡å®šè¦æ‰“å¼€çš„ç£ç›˜ç´¢å¼•å·
-     * @param[in] pnDiskSize ç£ç›˜å¤§å°ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] bLockVolume æ˜¯å¦é”å®šç£ç›˜çš„æ‰€æœ‰å·æ ‡
-     * @param[in] bDismountVolume æ˜¯å¦dismountç£ç›˜çš„æ‰€æœ‰å·æ ‡ï¼Œå¦‚æœä¸ºTRUEï¼Œåˆ™å‚æ•°bLockVolumeæ— è®ºæ˜¯å¦ä¸ºTRUEéƒ½ä¼šå¼ºåˆ¶ä¸ºTRUE
-     * @param[in] pDiskGeometry ç£ç›˜Geometryä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] pDrvLayout ç£ç›˜Layoutä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] nSeekOffset è¯»å†™æŒ‡é’ˆè·³è½¬åˆ°æŒ‡å®šçš„åç§»ä½ç½®ï¼Œé»˜è®¤ä¸º0
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief ´ò¿ª´ÅÅÌ£¨Ö»¶Á£©
+     * @param[in] dwDiskNumber Ö¸¶¨Òª´ò¿ªµÄ´ÅÅÌË÷ÒıºÅ
+     * @param[in] pnDiskSize ´ÅÅÌ´óĞ¡£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] bLockVolume ÊÇ·ñËø¶¨´ÅÅÌµÄËùÓĞ¾í±ê
+     * @param[in] bDismountVolume ÊÇ·ñdismount´ÅÅÌµÄËùÓĞ¾í±ê£¬Èç¹ûÎªTRUE£¬Ôò²ÎÊıbLockVolumeÎŞÂÛÊÇ·ñÎªTRUE¶¼»áÇ¿ÖÆÎªTRUE
+     * @param[in] pDiskGeometry ´ÅÅÌGeometryĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] pDrvLayout ´ÅÅÌLayoutĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] nSeekOffset ¶ÁĞ´Ö¸ÕëÌø×ªµ½Ö¸¶¨µÄÆ«ÒÆÎ»ÖÃ£¬Ä¬ÈÏÎª0
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT OpenReadOnly(
         DWORD dwDiskNumber,
@@ -215,15 +215,15 @@ Exit0:
     }
 
     /**
-     * @brief æ‰“å¼€ç£ç›˜ï¼ˆè¯»å†™ï¼‰
-     * @param[in] dwDiskNumber æŒ‡å®šè¦æ‰“å¼€çš„ç£ç›˜ç´¢å¼•å·
-     * @param[in] pnDiskSize ç£ç›˜å¤§å°ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] bLockVolume æ˜¯å¦é”å®šç£ç›˜çš„æ‰€æœ‰å·æ ‡
-     * @param[in] bDismountVolume æ˜¯å¦dismountç£ç›˜çš„æ‰€æœ‰å·æ ‡ï¼Œå¦‚æœä¸ºTRUEï¼Œåˆ™å‚æ•°bLockVolumeæ— è®ºæ˜¯å¦ä¸ºTRUEéƒ½ä¼šå¼ºåˆ¶ä¸ºTRUE
-     * @param[in] pDiskGeometry ç£ç›˜Geometryä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] pDrvLayout ç£ç›˜Layoutä¿¡æ¯ï¼Œä¸éœ€è¦å¯å¡«ç©º
-     * @param[in] nSeekOffset è¯»å†™æŒ‡é’ˆè·³è½¬åˆ°æŒ‡å®šçš„åç§»ä½ç½®ï¼Œé»˜è®¤ä¸º0
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief ´ò¿ª´ÅÅÌ£¨¶ÁĞ´£©
+     * @param[in] dwDiskNumber Ö¸¶¨Òª´ò¿ªµÄ´ÅÅÌË÷ÒıºÅ
+     * @param[in] pnDiskSize ´ÅÅÌ´óĞ¡£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] bLockVolume ÊÇ·ñËø¶¨´ÅÅÌµÄËùÓĞ¾í±ê
+     * @param[in] bDismountVolume ÊÇ·ñdismount´ÅÅÌµÄËùÓĞ¾í±ê£¬Èç¹ûÎªTRUE£¬Ôò²ÎÊıbLockVolumeÎŞÂÛÊÇ·ñÎªTRUE¶¼»áÇ¿ÖÆÎªTRUE
+     * @param[in] pDiskGeometry ´ÅÅÌGeometryĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] pDrvLayout ´ÅÅÌLayoutĞÅÏ¢£¬²»ĞèÒª¿ÉÌî¿Õ
+     * @param[in] nSeekOffset ¶ÁĞ´Ö¸ÕëÌø×ªµ½Ö¸¶¨µÄÆ«ÒÆÎ»ÖÃ£¬Ä¬ÈÏÎª0
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT OpenReadWrite(
         DWORD dwDiskNumber,
@@ -247,14 +247,14 @@ Exit0:
     }
 
     /**
-     * @brief å…³é—­ç£ç›˜
+     * @brief ¹Ø±Õ´ÅÅÌ
      */
     void Close()
     {
         UnlockVolume(-1);
         m_file.Close();
 
-        // æ¸…ç©ºæ‰€æœ‰æˆå‘˜å˜é‡
+        // Çå¿ÕËùÓĞ³ÉÔ±±äÁ¿
         m_bStoragePropertyQueried = FALSE;
         m_diskNumber = -1;
         m_diskModel.Empty();
@@ -354,7 +354,7 @@ Exit0:
         return Ioctl(IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &geometry, sizeof(DISK_GEOMETRY), &junk);
     }
 
-    // è·å–ç£ç›˜å‹å·ï¼Œæ ¼å¼ï¼š"VendorId ProductId ProductRevision"
+    // »ñÈ¡´ÅÅÌĞÍºÅ£¬¸ñÊ½£º"VendorId ProductId ProductRevision"
     HRESULT GetDiskModel(_Out_ CString& model)
     {
         HRESULT hr = StorageQueryProperty();
@@ -417,7 +417,7 @@ Exit0:
 
     HRESULT GetDiskBusType(CString& busType)
     {
-        // ä»¥ä¸‹é¡¹åœ¨ä¸åŒVSç‰ˆæœ¬ä¸­å¯èƒ½ä¸å­˜åœ¨ï¼Œæ•…ç»Ÿä¸€ä½¿ç”¨å±€éƒ¨å˜é‡ä»£æ›¿
+        // ÒÔÏÂÏîÔÚ²»Í¬VS°æ±¾ÖĞ¿ÉÄÜ²»´æÔÚ£¬¹ÊÍ³Ò»Ê¹ÓÃ¾Ö²¿±äÁ¿´úÌæ
         const UINT32 BusTypeVirtual = 14;
         const UINT32 BusTypeFileBackedVirtual = 15;
         const UINT32 BusTypeSpaces = 16;
@@ -507,7 +507,7 @@ Exit0:
 
         for (TCHAR* pbuf = buffer; *pbuf != '\x00'; pbuf += (lstrlen(pbuf) + 1))
         {
-            // è·¯å¾„æ ¼å¼ï¼š"\\\\.\\C:"
+            // Â·¾¶¸ñÊ½£º"\\\\.\\C:"
             CString filepath = _T("\\\\.\\");
             filepath += pbuf;
             filepath = filepath.Left(filepath.GetLength() - 1);
@@ -594,9 +594,9 @@ Exit0:
         for (DWORD i = 0; i < pLayoutEx->PartitionCount; i++)
         {
             const PARTITION_INFORMATION_EX& partition = pLayoutEx->PartitionEntry[i];
-            if (0 == partition.PartitionNumber && 0 == partition.StartingOffset.QuadPart && 0 == partition.PartitionLength.QuadPart)
+            if (0 == partition.PartitionNumber)
             {
-                continue; // æœ‰æ—¶ä¼šå¤šå‡ºä¸€ä¸ªç©ºçš„ä¸å­˜åœ¨åˆ†åŒºï¼Œä¸è®°å½•
+                continue; // ·ÖÇøÊıÊÇ´Ó1¿ªÊ¼£¬Ğ¡ÓÚ1µÄÌø¹ı
             }
 
             layout.PartitionEntry.Add(pLayoutEx->PartitionEntry[i]);
@@ -658,7 +658,7 @@ Exit0:
         return hr;
     }
 
-    // åˆ¤æ–­ç£ç›˜æ˜¯å¦å¯å†™å…¥
+    // ÅĞ¶Ï´ÅÅÌÊÇ·ñ¿ÉĞ´Èë
     BOOL IsDiskWritable() const
     {
         DWORD junk = 0;
@@ -670,13 +670,13 @@ Exit0:
         return false;
     }
 
-    // åˆ¤æ–­ç£ç›˜æ˜¯å¦ä¸ºåªè¯»ç›˜
+    // ÅĞ¶Ï´ÅÅÌÊÇ·ñÎªÖ»¶ÁÅÌ
     BOOL IsDiskReadonly() const
     {
         return (!IsDiskWritable());
     }
 
-    // åˆ¤æ–­ç£ç›˜æ˜¯ä¸æ˜¯ç³»ç»Ÿç›˜
+    // ÅĞ¶Ï´ÅÅÌÊÇ²»ÊÇÏµÍ³ÅÌ
     BOOL IsOperationSystemDisk() const
     {
         TCHAR sysDir[MAX_PATH];
@@ -697,11 +697,11 @@ Exit0:
     }
 
     /**
-     * @brief è·å–å½“å‰ç£ç›˜çš„æ‰€æœ‰å·æ ‡åç§°
-     * @param[out] volumeNames è·å–åˆ°çš„å·æ ‡åˆ—è¡¨ï¼Œç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @param[in] bAppendBackblash æ˜¯å¦åœ¨å·æ ‡å°¾éƒ¨åç¼€åæ–œæ 
-     * @attention è‹¥ä¸æƒ³æ‰“å¼€ç£ç›˜ï¼Œåˆ™å¯ç›´æ¥è°ƒç”¨åŒåçš„é™æ€å‡½æ•°GetDiskVolumeNames
-     * @see æ‹¿åˆ°è·¯å¾„åï¼Œå¯è°ƒç”¨ç³»ç»ŸAPIï¼šGetVolumeInformationè·å–è¯¦ç»†ä¿¡æ¯ï¼Œå‚æ•°bAppendBackblashéœ€è¦è®¾ä¸ºTRUE
+     * @brief »ñÈ¡µ±Ç°´ÅÅÌµÄËùÓĞ¾í±êÃû³Æ
+     * @param[out] volumeNames »ñÈ¡µ½µÄ¾í±êÁĞ±í£¬Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @param[in] bAppendBackblash ÊÇ·ñÔÚ¾í±êÎ²²¿ºó×º·´Ğ±¸Ü
+     * @attention Èô²»Ïë´ò¿ª´ÅÅÌ£¬Ôò¿ÉÖ±½Óµ÷ÓÃÍ¬ÃûµÄ¾²Ì¬º¯ÊıGetDiskVolumeNames
+     * @see ÄÃµ½Â·¾¶ºó£¬¿Éµ÷ÓÃÏµÍ³API£ºGetVolumeInformation»ñÈ¡ÏêÏ¸ĞÅÏ¢£¬²ÎÊıbAppendBackblashĞèÒªÉèÎªTRUE
      */
     VOID GetDiskVolumeNames(CAtlArray<CString>& volumeNames, BOOL bAppendBackblash = TRUE)
     {
@@ -709,9 +709,9 @@ Exit0:
     }
 
     /**
-     * @brief é”å®šå½“å‰ç£ç›˜çš„æŒ‡å®šå·æ ‡
-     * @param[in] lpVolumeName å·æ ‡åç§°ã€‚ç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief Ëø¶¨µ±Ç°´ÅÅÌµÄÖ¸¶¨¾í±ê
+     * @param[in] lpVolumeName ¾í±êÃû³Æ¡£Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT LockVolume(LPCTSTR lpVolumeName)
     {
@@ -723,7 +723,7 @@ Exit0:
 
         if (m_lockedVolumes.end() != m_lockedVolumes.find(strVolumeName))
         {
-            return S_OK; // å·²é”å®šè¿‡ï¼Œåˆ™ç›´æ¥è¿”å›æˆåŠŸ
+            return S_OK; // ÒÑËø¶¨¹ı£¬ÔòÖ±½Ó·µ»Ø³É¹¦
         }
 
         CAtlFile hVolume;
@@ -739,14 +739,14 @@ Exit0:
             return AtlHresultFromLastError();
         }
 
-        // è®°å½•è¢«é”å®šçš„å·æ ‡
+        // ¼ÇÂ¼±»Ëø¶¨µÄ¾í±ê
         m_lockedVolumes[strVolumeName] = hVolume.Detach();
         return S_OK;
     }
 
     /**
-     * @brief é”å®šå½“å‰ç£ç›˜çš„æŒ‡å®šå·æ ‡
-     * @param[in] volumeIndex éœ€è¦é”å®šçš„å·æ ‡ç´¢å¼•ï¼Œä»0å¼€å§‹ã€‚å¡«-1æ—¶é”å®šå½“å‰ç£ç›˜çš„æ‰€æœ‰å·æ ‡
+     * @brief Ëø¶¨µ±Ç°´ÅÅÌµÄÖ¸¶¨¾í±ê
+     * @param[in] volumeIndex ĞèÒªËø¶¨µÄ¾í±êË÷Òı£¬´Ó0¿ªÊ¼¡£Ìî-1Ê±Ëø¶¨µ±Ç°´ÅÅÌµÄËùÓĞ¾í±ê
      */
     HRESULT LockVolume(DWORD volumeIndex = -1)
     {
@@ -764,12 +764,12 @@ Exit0:
         }
 
         HRESULT hr = E_FAIL;
-        CAtlArray<CString> rollbackVolumes; // è®°å½•æœ¬æ¬¡è¢«æˆåŠŸé”å®šçš„å·æ ‡ï¼Œåœ¨å‡½æ•°å¤±è´¥æ—¶ï¼Œéœ€è¦å›æ»šè§£é”æœ¬æ¬¡è¢«é”å®šçš„å·æ ‡
+        CAtlArray<CString> rollbackVolumes; // ¼ÇÂ¼±¾´Î±»³É¹¦Ëø¶¨µÄ¾í±ê£¬ÔÚº¯ÊıÊ§°ÜÊ±£¬ĞèÒª»Ø¹ö½âËø±¾´Î±»Ëø¶¨µÄ¾í±ê
         for (size_t i = 0; i < volumes.GetCount(); i++)
         {
             if (m_lockedVolumes.end() != m_lockedVolumes.find(volumes[i]))
             {
-                continue; // è‹¥å·²ç»é”å®šè¿‡ï¼Œåˆ™ä¸éœ€è¦å†é”å®š
+                continue; // ÈôÒÑ¾­Ëø¶¨¹ı£¬Ôò²»ĞèÒªÔÙËø¶¨
             }
 
             CAtlFile hVolume;
@@ -853,7 +853,7 @@ Exit0:
     }
 
     /**
-     * @attention å¸è½½å‰å¿…é¡»å…ˆUnlockVolume
+     * @attention Ğ¶ÔØÇ°±ØĞëÏÈUnlockVolume
      */
     HRESULT DismountVolume(LPCTSTR lpVolumeName)
     {
@@ -879,7 +879,7 @@ Exit0:
     }
 
     /**
-     * @attention å¸è½½å‰å¿…é¡»å…ˆUnlockVolume
+     * @attention Ğ¶ÔØÇ°±ØĞëÏÈUnlockVolume
      */
     HRESULT DismountVolume(DWORD volumeIndex = -1)
     {
@@ -905,10 +905,10 @@ Exit0:
     }
 
     /**
-     * @brief è·å–å·æ ‡çš„åˆ†åŒºä¿¡æ¯
-     * @param[in] lpVolumeName å·æ ‡åç§°ã€‚ç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @param[out] info å·æ ‡å¯¹åº”çš„åˆ†åŒºä¿¡æ¯
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief »ñÈ¡¾í±êµÄ·ÖÇøĞÅÏ¢
+     * @param[in] lpVolumeName ¾í±êÃû³Æ¡£Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @param[out] info ¾í±ê¶ÔÓ¦µÄ·ÖÇøĞÅÏ¢
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     HRESULT GetVolumePartitionInfoEx(LPCTSTR lpVolumeName, PARTITION_INFORMATION_EX& info)
     {
@@ -918,7 +918,7 @@ Exit0:
             return E_INVALIDARG;
         }
 
-        // å…ˆçœ‹æ˜¯ä¸æ˜¯æ‰“å¼€è¿‡è¿™ä¸ªå·æ ‡ï¼Œè‹¥æ‰“å¼€è¿‡ï¼Œåˆ™ç›´æ¥ä½¿ç”¨å…¶å¥æŸ„
+        // ÏÈ¿´ÊÇ²»ÊÇ´ò¿ª¹ıÕâ¸ö¾í±ê£¬Èô´ò¿ª¹ı£¬ÔòÖ±½ÓÊ¹ÓÃÆä¾ä±ú
         std::map<CString, HANDLE>::iterator it = m_lockedVolumes.find(strVolumeName);
         if (m_lockedVolumes.end() != it)
         {
@@ -966,9 +966,9 @@ Exit0:
     }
 
     /**
-     * @brief å°†ç£ç›˜è·¯å¾„ï¼Œè½¬æ¢ä¸ºç£ç›˜å·
-     * @param[in] lpFilePath ç£ç›˜è·¯å¾„ã€‚ç¤ºä¾‹ï¼š"\\\\.\\PhysicalDrive0"
-     * @return å¤±è´¥è¿”å›-1ï¼ŒæˆåŠŸè¿”å›å¯¹åº”çš„ç£ç›˜å·
+     * @brief ½«´ÅÅÌÂ·¾¶£¬×ª»»Îª´ÅÅÌºÅ
+     * @param[in] lpFilePath ´ÅÅÌÂ·¾¶¡£Ê¾Àı£º"\\\\.\\PhysicalDrive0"
+     * @return Ê§°Ü·µ»Ø-1£¬³É¹¦·µ»Ø¶ÔÓ¦µÄ´ÅÅÌºÅ
      */
     static DWORD PhysicalDrivePathToDiskNumber(LPCTSTR lpFilePath)
     {
@@ -987,12 +987,12 @@ Exit0:
     }
 
     /**
-     * @brief æ ¹æ®ç›˜ç¬¦è·å–å…¶å¯¹åº”çš„ç£ç›˜ç´¢å¼•å·ã€åˆ†åŒºå·ã€è®¾å¤‡ç±»å‹
-     * @param[in] letter æŒ‡å®šè¦æŸ¥è¯¢çš„ç›˜ç¬¦
-     * @param[in] diskNumber ç£ç›˜ç´¢å¼•å·
-     * @param[in] partitionNumber åˆ†åŒºå·
-     * @param[in] deviceType è®¾å¤‡ç±»å‹
-     * @return æˆåŠŸè¿”å›S_OK
+     * @brief ¸ù¾İÅÌ·û»ñÈ¡Æä¶ÔÓ¦µÄ´ÅÅÌË÷ÒıºÅ¡¢·ÖÇøºÅ¡¢Éè±¸ÀàĞÍ
+     * @param[in] letter Ö¸¶¨Òª²éÑ¯µÄÅÌ·û
+     * @param[in] diskNumber ´ÅÅÌË÷ÒıºÅ
+     * @param[in] partitionNumber ·ÖÇøºÅ
+     * @param[in] deviceType Éè±¸ÀàĞÍ
+     * @return ³É¹¦·µ»ØS_OK
      */
     static HRESULT DiskLetterToDiskNumber(TCHAR letter, DWORD* diskNumber, DWORD* partitionNumber = NULL, DEVICE_TYPE* deviceType = NULL)
     {
@@ -1030,10 +1030,10 @@ Exit0:
     }
 
     /**
-     * è·å–æ¨¡å—æ‰€åœ¨çš„ç£ç›˜ç´¢å¼•å·
-     * @param[out] diskNumber è·å–åˆ°çš„æ¨¡å—æ‰€åœ¨ç£ç›˜ç´¢å¼•å·
-     * @param[in] hModule æ¨¡å—å¥æŸ„
-     * @return æˆåŠŸè¿”å›S_OK
+     * »ñÈ¡Ä£¿éËùÔÚµÄ´ÅÅÌË÷ÒıºÅ
+     * @param[out] diskNumber »ñÈ¡µ½µÄÄ£¿éËùÔÚ´ÅÅÌË÷ÒıºÅ
+     * @param[in] hModule Ä£¿é¾ä±ú
+     * @return ³É¹¦·µ»ØS_OK
      */
     static HRESULT GetModuleDiskNumber(DWORD& diskNumber, HMODULE hModule = NULL)
     {
@@ -1047,10 +1047,10 @@ Exit0:
     }
 
     /**
-     * @brief è·å–å·æ ‡å¯¹åº”çš„ç›˜ç¬¦
-     * @param[in] volumeNames å·æ ‡åç§°ï¼Œç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}\
-     * @param[out] diskLetter è·å–åˆ°çš„ç›˜ç¬¦
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
+     * @brief »ñÈ¡¾í±ê¶ÔÓ¦µÄÅÌ·û
+     * @param[in] volumeNames ¾í±êÃû³Æ£¬Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}\
+     * @param[out] diskLetter »ñÈ¡µ½µÄÅÌ·û
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
      */
     static HRESULT VolumeNameToDiskLetter(LPCTSTR volumeName, TCHAR& diskLetter)
     {
@@ -1058,7 +1058,7 @@ Exit0:
         CAutoVectorPtr<TCHAR> mountPointsBuffer(new TCHAR[MAX_POINT_COUNT]);
         ZeroMemory(mountPointsBuffer, MAX_POINT_COUNT * sizeof(TCHAR));
 
-        // è·å–å·æ ‡çš„æ‰€æœ‰æŒ‚è½½ç‚¹åˆ—è¡¨
+        // »ñÈ¡¾í±êµÄËùÓĞ¹ÒÔØµãÁĞ±í
         DWORD realMountPointCount = 0;
         if (FALSE == ::GetVolumePathNamesForVolumeName(volumeName, mountPointsBuffer, MAX_POINT_COUNT, &realMountPointCount))
         {
@@ -1080,7 +1080,7 @@ Exit0:
             return AtlHresultFromLastError();
         }
 
-        // éå†æ‰€æœ‰æŒ‚è½½ç‚¹ï¼Œæ‰¾åˆ°æ˜¯ç›˜ç¬¦çš„
+        // ±éÀúËùÓĞ¹ÒÔØµã£¬ÕÒµ½ÊÇÅÌ·ûµÄ
         for (TCHAR *mountPoint = mountPointsBuffer; *mountPoint; mountPoint += lstrlen(mountPoint) + 1)
         {
             // Check if it's a disk letter.
@@ -1095,9 +1095,9 @@ Exit0:
     }
 
     /**
-     * @brief éå†æŸ¥æ‰¾æœ¬æœºæ‰€æœ‰çš„å·æ ‡
-     * @param[out] volumeNames è·å–åˆ°çš„å·æ ‡åˆ—è¡¨ï¼Œç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @param[in] bAppendBackblash æ˜¯å¦åœ¨å·æ ‡å°¾éƒ¨åç¼€åæ–œæ 
+     * @brief ±éÀú²éÕÒ±¾»úËùÓĞµÄ¾í±ê
+     * @param[out] volumeNames »ñÈ¡µ½µÄ¾í±êÁĞ±í£¬Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @param[in] bAppendBackblash ÊÇ·ñÔÚ¾í±êÎ²²¿ºó×º·´Ğ±¸Ü
      */
     static void FindAllVolumeNames(_Out_ CAtlArray<CString>& paths, _In_ BOOL bAppendBackblash = TRUE)
     {
@@ -1110,7 +1110,7 @@ Exit0:
             return;
         }
 
-        // é»˜è®¤Win APIæšä¸¾åˆ°çš„è·¯å¾„ï¼Œæ˜¯æœ‰åæ–œæ çš„
+        // Ä¬ÈÏWin APIÃ¶¾Ùµ½µÄÂ·¾¶£¬ÊÇÓĞ·´Ğ±¸ÜµÄ
         if (!bAppendBackblash)
         {
             size_t len = _tcscnlen(szVolume, MAX_PATH);
@@ -1137,19 +1137,19 @@ Exit0:
     }
 
     /**
-     * @brief è·å–ç£ç›˜çš„æ‰€æœ‰å·æ ‡
-     * @param[in] diskNumber ç£ç›˜ç´¢å¼•å·
-     * @param[out] volumeNames è·å–åˆ°çš„å·æ ‡åˆ—è¡¨ï¼Œç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @param[in] bAppendBackblash æ˜¯å¦åœ¨å·æ ‡å°¾éƒ¨åç¼€åæ–œæ 
-     * @attention è‹¥éœ€è¦è·å–å½“å‰æ‰“å¼€çš„ç£ç›˜å·æ ‡ï¼Œå¯è°ƒç”¨éé™æ€çš„åŒåå‡½æ•°GetDiskVolumeNamesï¼Œæœ¬å‡½æ•°ä¸ºé™æ€å‡½æ•°
-     * @see æ‹¿åˆ°è·¯å¾„åï¼Œå¯è°ƒç”¨ç³»ç»ŸAPIï¼šGetVolumeInformationè·å–è¯¦ç»†ä¿¡æ¯ï¼Œå‚æ•°bAppendBackblashéœ€è¦è®¾ä¸ºTRUE
+     * @brief »ñÈ¡´ÅÅÌµÄËùÓĞ¾í±ê
+     * @param[in] diskNumber ´ÅÅÌË÷ÒıºÅ
+     * @param[out] volumeNames »ñÈ¡µ½µÄ¾í±êÁĞ±í£¬Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @param[in] bAppendBackblash ÊÇ·ñÔÚ¾í±êÎ²²¿ºó×º·´Ğ±¸Ü
+     * @attention ÈôĞèÒª»ñÈ¡µ±Ç°´ò¿ªµÄ´ÅÅÌ¾í±ê£¬¿Éµ÷ÓÃ·Ç¾²Ì¬µÄÍ¬Ãûº¯ÊıGetDiskVolumeNames£¬±¾º¯ÊıÎª¾²Ì¬º¯Êı
+     * @see ÄÃµ½Â·¾¶ºó£¬¿Éµ÷ÓÃÏµÍ³API£ºGetVolumeInformation»ñÈ¡ÏêÏ¸ĞÅÏ¢£¬²ÎÊıbAppendBackblashĞèÒªÉèÎªTRUE
      */
     static void GetDiskVolumeNames(DWORD diskNumber, CAtlArray<CString>& volumeNames, BOOL bAppendBackblash = TRUE)
     {
         volumeNames.RemoveAll();
 
         CAtlArray<CString> allVolumes;
-        FindAllVolumeNames(allVolumes, FALSE); // ä¸èƒ½æœ‰åæ–œæ ç»“å°¾ï¼Œå¦åˆ™æ— æ³•CreateFileæ‰“å¼€
+        FindAllVolumeNames(allVolumes, FALSE); // ²»ÄÜÓĞ·´Ğ±¸Ü½áÎ²£¬·ñÔòÎŞ·¨CreateFile´ò¿ª
 
         for (size_t i = 0; i < allVolumes.GetCount(); i++)
         {
@@ -1187,11 +1187,11 @@ Exit0:
     }
 
     /**
-     * @brief è·å–æœ¬æœºå·æ ‡çš„åˆ†åŒºä¿¡æ¯
-     * @param[in] lpVolumeName å·æ ‡åç§°ã€‚ç¤ºä¾‹ï¼š\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
-     * @param[out] info å·æ ‡å¯¹åº”çš„åˆ†åŒºä¿¡æ¯
-     * @return æˆåŠŸè¿”å›S_OKï¼Œå¤±è´¥è¿”å›é”™è¯¯ç 
-     * @attention è‹¥è¦è·å–å½“å‰å·²æ‰“å¼€çš„ç£ç›˜å·æ ‡ï¼Œåˆ™è°ƒç”¨GetVolumePartitionInfoEx
+     * @brief »ñÈ¡±¾»ú¾í±êµÄ·ÖÇøĞÅÏ¢
+     * @param[in] lpVolumeName ¾í±êÃû³Æ¡£Ê¾Àı£º\\?\Volume{a66da20f-2550-4187-b761-199ae04170a4}
+     * @param[out] info ¾í±ê¶ÔÓ¦µÄ·ÖÇøĞÅÏ¢
+     * @return ³É¹¦·µ»ØS_OK£¬Ê§°Ü·µ»Ø´íÎóÂë
+     * @attention ÈôÒª»ñÈ¡µ±Ç°ÒÑ´ò¿ªµÄ´ÅÅÌ¾í±ê£¬Ôòµ÷ÓÃGetVolumePartitionInfoEx
      */
     static HRESULT GetHostVolumePartitionInfoEx(LPCTSTR lpVolumeName, PARTITION_INFORMATION_EX& info)
     {
@@ -1217,12 +1217,12 @@ Exit0:
     }
 
 private:
-    ZLPhysicalDrive& operator=(const ZLPhysicalDrive& rhs); // ç¦ç”¨èµ‹å€¼è¯­å¥
-    ZLPhysicalDrive(const ZLPhysicalDrive& rhs); // ç¦ç”¨æ‹·è´æ„é€ å‡½æ•°
+    ZLPhysicalDrive& operator=(const ZLPhysicalDrive& rhs); // ½ûÓÃ¸³ÖµÓï¾ä
+    ZLPhysicalDrive(const ZLPhysicalDrive& rhs); // ½ûÓÃ¿½±´¹¹Ôìº¯Êı
 
     HRESULT StorageQueryProperty()
     {
-        // åªæŸ¥è¯¢ä¸€æ¬¡
+        // Ö»²éÑ¯Ò»´Î
         if (m_bStoragePropertyQueried)
         {
             return S_OK;
@@ -1236,7 +1236,7 @@ private:
         STORAGE_DESCRIPTOR_HEADER stHeader;
         ZeroMemory(&stHeader, sizeof(STORAGE_DESCRIPTOR_HEADER));
 
-        // æŸ¥è¯¢æè¿°ä¿¡æ¯å¤´çš„å¤§å°
+        // ²éÑ¯ÃèÊöĞÅÏ¢Í·µÄ´óĞ¡
         DWORD junk = 0;
         HRESULT hr = Ioctl(IOCTL_STORAGE_QUERY_PROPERTY, &stQuery, sizeof(stQuery), &stHeader, sizeof(stHeader), &junk);
         if (FAILED(hr))
@@ -1244,11 +1244,11 @@ private:
             return hr;
         }
 
-        // ç”³è¯·ç¼“å­˜
+        // ÉêÇë»º´æ
         CAutoVectorPtr<char> descHeaderBuf(new char[stHeader.Size]);
         ZeroMemory(descHeaderBuf, stHeader.Size);
 
-        // æŸ¥è¯¢æè¿°ä¿¡æ¯å¤´
+        // ²éÑ¯ÃèÊöĞÅÏ¢Í·
         hr = Ioctl(IOCTL_STORAGE_QUERY_PROPERTY, &stQuery, sizeof(stQuery), descHeaderBuf, stHeader.Size, &junk);
         if (FAILED(hr))
         {
@@ -1257,11 +1257,11 @@ private:
 
         STORAGE_DEVICE_DESCRIPTOR* pDescriptor = (STORAGE_DEVICE_DESCRIPTOR*)(char*)descHeaderBuf;
 
-        // è·å–ç£ç›˜åºåˆ—å·
+        // »ñÈ¡´ÅÅÌĞòÁĞºÅ
         if (pDescriptor->SerialNumberOffset != 0)
         {
             CStringA tmp = descHeaderBuf + pDescriptor->SerialNumberOffset;
-            tmp.Trim(); // éƒ¨åˆ†åºåˆ—å·å–å‡ºæ¥ä¹‹åï¼Œå‰åä¼šæœ‰å¾ˆå¤šç©ºæ ¼ï¼ŒæŠŠç©ºæ ¼å»æ‰
+            tmp.Trim(); // ²¿·ÖĞòÁĞºÅÈ¡³öÀ´Ö®ºó£¬Ç°ºó»áÓĞºÜ¶à¿Õ¸ñ£¬°Ñ¿Õ¸ñÈ¥µô
             m_diskSerialNumber = CA2W(tmp);
         }
         else
@@ -1269,7 +1269,7 @@ private:
             m_diskSerialNumber.Empty();
         }
 
-        // è·å–ç£ç›˜æ¥å£ç±»å‹
+        // »ñÈ¡´ÅÅÌ½Ó¿ÚÀàĞÍ
         m_diskBusType = pDescriptor->BusType;
 
         // VendorId
@@ -1300,7 +1300,7 @@ private:
             m_diskProductRevision = CA2W(tmp);
         }
 
-        // æ‹¼æ¥ç£ç›˜å‹å·
+        // Æ´½Ó´ÅÅÌĞÍºÅ
         m_diskModel.Format(_T("%s %s %s"), m_diskVendorId, m_diskProductId, m_diskProductRevision);
         m_diskModel.Trim();
 
@@ -1309,8 +1309,8 @@ private:
     }
 
     /**
-     * @brief ç§»é™¤å·æ ‡å°¾éƒ¨çš„åæ–œæ ï¼Œè‹¥å°¾éƒ¨ä¸å­˜åœ¨åæ–œæ ï¼Œåˆ™ä¸æ“ä½œ
-     *    å› ä¸ºCreateFileæ‰“å¼€å·æ ‡æ—¶ï¼Œä¼ å…¥çš„è·¯å¾„ä¸èƒ½åç¼€åæ–œæ ï¼Œæ•…æœ‰äº†æ­¤æ¥å£
+     * @brief ÒÆ³ı¾í±êÎ²²¿µÄ·´Ğ±¸Ü£¬ÈôÎ²²¿²»´æÔÚ·´Ğ±¸Ü£¬Ôò²»²Ù×÷
+     *    ÒòÎªCreateFile´ò¿ª¾í±êÊ±£¬´«ÈëµÄÂ·¾¶²»ÄÜºó×º·´Ğ±¸Ü£¬¹ÊÓĞÁË´Ë½Ó¿Ú
      */
     static CString VolumeNameRemoveBackblash(LPCTSTR lpVolumeName)
     {
@@ -1336,18 +1336,18 @@ private:
 
 private:
     CAtlFile            m_file;
-    DWORD               m_diskNumber;               //!< ç£ç›˜ç´¢å¼•å·
+    DWORD               m_diskNumber;               //!< ´ÅÅÌË÷ÒıºÅ
 
-    // IOCTL_STORAGE_QUERY_PROPERTYä¿¡æ¯
-    BOOL                m_bStoragePropertyQueried;  //!< æ˜¯å¦æŸ¥è¯¢è¿‡IOCTL_STORAGE_QUERY_PROPERTYï¼ŒåªæŸ¥è¯¢ä¸€æ¬¡
-    CString             m_diskModel;                //!< ç£ç›˜å‹å·
-    CString             m_diskSerialNumber;         //!< ç£ç›˜åºåˆ—å·
-    STORAGE_BUS_TYPE    m_diskBusType;              //!< æ€»çº¿æ¥å£ç±»å‹
+    // IOCTL_STORAGE_QUERY_PROPERTYĞÅÏ¢
+    BOOL                m_bStoragePropertyQueried;  //!< ÊÇ·ñ²éÑ¯¹ıIOCTL_STORAGE_QUERY_PROPERTY£¬Ö»²éÑ¯Ò»´Î
+    CString             m_diskModel;                //!< ´ÅÅÌĞÍºÅ
+    CString             m_diskSerialNumber;         //!< ´ÅÅÌĞòÁĞºÅ
+    STORAGE_BUS_TYPE    m_diskBusType;              //!< ×ÜÏß½Ó¿ÚÀàĞÍ
     CString             m_diskVendorId;
     CString             m_diskProductId;
     CString             m_diskProductRevision;
 
-    std::map<CString, HANDLE> m_lockedVolumes; //!< è¢«é”å®šçš„volume, <volumeName, handle>
+    std::map<CString, HANDLE> m_lockedVolumes; //!< ±»Ëø¶¨µÄvolume, <volumeName, handle>
 };
 
 }
