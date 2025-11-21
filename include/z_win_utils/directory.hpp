@@ -93,10 +93,9 @@ public:
             return FALSE;
         }
 
-        BOOL bReturn = FALSE;
-        CString strDir = ZLPath::PathAddBackslash(lpDir);
+        CString sDir = ZLPath::PathAddBackslash(lpDir);
         CString sFindPath;
-        sFindPath.Format(_T("%s*.*"), strDir);
+        sFindPath.Format(_T("%s*.*"), sDir.GetString());
         WIN32_FIND_DATA fData;
         HANDLE hFind = ::FindFirstFile(sFindPath, &fData);
         if (hFind == INVALID_HANDLE_VALUE)
@@ -114,7 +113,7 @@ public:
             if (fData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
                 CString sSubfolder;
-                sSubfolder.Format(_T("%s%s\\"), strDir, fData.cFileName);
+                sSubfolder.Format(_T("%s%s\\"), sDir, fData.cFileName);
                 if ((FALSE == DeleteDirectory(sSubfolder, bContinueWhenFail)) && (!bContinueWhenFail))
                 {
                     goto Exit0;
@@ -122,16 +121,19 @@ public:
             }
             else
             {
-                CString sFileName = fData.cFileName;
-                sFileName.MakeLower();
-                if ((FALSE == ::DeleteFile(strDir + sFileName)) && (!bContinueWhenFail))
+                // 只读文件，必须先清除只读属性，才能删除掉
+                CString sFilePath = sDir + fData.cFileName;
+                if (fData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+                {
+                    ::SetFileAttributes(sFilePath, fData.dwFileAttributes & ~FILE_ATTRIBUTE_READONLY);
+                }
+
+                if ((FALSE == ::DeleteFile(sFilePath)) && (!bContinueWhenFail))
                 {
                     goto Exit0;
                 }
             }
         } while (::FindNextFile(hFind, &fData) != 0);
-
-        bReturn = TRUE;
 
 Exit0:
         if (hFind != INVALID_HANDLE_VALUE)
@@ -139,10 +141,7 @@ Exit0:
             ::FindClose(hFind);
         }
 
-        ::RemoveDirectory(strDir);
-        strDir = ZLPath::PathRemoveBackslash(strDir);
-        ::RemoveDirectory(strDir);
-        return bReturn;
+        return ::RemoveDirectory(sDir);
     }
 
     /**
