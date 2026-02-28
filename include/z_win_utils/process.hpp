@@ -532,7 +532,7 @@ namespace WinUtils
                 }
 
                 // read ProcessParameters from 64-bit address space
-                PBYTE* parameters = (PBYTE*)*(LPVOID*)(peb + ProcessParametersOffset); // address in remote process adress space
+                PVOID64 parameters = *(PVOID64*)(peb + ProcessParametersOffset); // address in remote process adress space
                 err = read(hProcess, parameters, pp, ppSize, NULL);
                 if (err != 0)
                 {
