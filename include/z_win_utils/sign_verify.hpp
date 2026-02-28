@@ -355,7 +355,7 @@ clean0:
                     continue;
                 }
 
-                _wcslwr(ProcessFullName);
+                _wcslwr_s(ProcessFullName, MAX_PATH);
 
                 if( NULL== wcsstr(ProcessFullName, L"windows\\explorer.exe") ){
                     CloseHandle(hProcess);
@@ -1110,7 +1110,7 @@ clean0:
             size_t len = strlen(lpName);
             LPSTR str = new char[len + 1];
             strcpy_s(str, len + 1, lpName);
-            _strlwr(str);
+            _strlwr_s(str, len);
 
             for (it = m_trustNames.begin(); it != m_trustNames.end(); ++it) {
 
@@ -1265,7 +1265,7 @@ clean0:
             if (0 == nRetCode)
                 goto clean0;
 
-            _strlwr(szInfo);
+            _strlwr_s(szInfo, nlen + 2);
 
             for (i = 0; i < (int)m_trustNames.size(); ++i) {
                 const char* p = m_trustNames[i].c_str();
